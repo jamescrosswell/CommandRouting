@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-*",
+  "description": "Test Class Library",
+  "authors": [ "james" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnx451": { },
+    "dnxcore50": { }
+  },
+  "dependencies": {
+    "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Routing": "1.0.0-rc1-final",
+    "System.Runtime": "4.0.21-beta-23516"
+  }
+}
