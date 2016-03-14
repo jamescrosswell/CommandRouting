@@ -14,6 +14,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample", "src\Sample\Sample
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandRouting", "src\CommandRouting\CommandRouting.xproj", "{3F17BEC2-92A1-4E5D-BFC0-A48B62280EC8}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "CommandRouting.UnitTests", "src\CommandRouting.UnitTests\CommandRouting.UnitTests.xproj", "{9CAE217D-35EF-4929-9354-3F3158A4D2FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{3F17BEC2-92A1-4E5D-BFC0-A48B62280EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F17BEC2-92A1-4E5D-BFC0-A48B62280EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F17BEC2-92A1-4E5D-BFC0-A48B62280EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CAE217D-35EF-4929-9354-3F3158A4D2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CAE217D-35EF-4929-9354-3F3158A4D2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CAE217D-35EF-4929-9354-3F3158A4D2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CAE217D-35EF-4929-9354-3F3158A4D2FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,5 +41,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9C55BD91-F8A1-48DA-BD74-C6824081E1E2} = {CB467F85-97F4-41B7-BF80-35B0C18B47E9}
 		{3F17BEC2-92A1-4E5D-BFC0-A48B62280EC8} = {CB467F85-97F4-41B7-BF80-35B0C18B47E9}
+		{9CAE217D-35EF-4929-9354-3F3158A4D2FD} = {CB467F85-97F4-41B7-BF80-35B0C18B47E9}
 	EndGlobalSection
 EndGlobal

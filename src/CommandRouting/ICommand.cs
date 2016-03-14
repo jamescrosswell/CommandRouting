@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Net;
-using Microsoft.AspNet.Mvc;
-
-namespace CommandRouting
+﻿namespace CommandRouting
 {
     public interface ICommand
     {

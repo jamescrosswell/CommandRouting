@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using CommandRouting.Helpers;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Routing;
 
@@ -9,7 +10,18 @@ namespace CommandRouting
         where TCommand: ICommand
     {
         public async Task RouteAsync(RouteContext context)
-        {
+        {                        
+            // Work out what kind of request model we should be dealing with
+            Type requestType = CommandHelper.GetCommandRequestType<TCommand>();
+
+            // TODO: Build a request model from the request url + the request body
+
+            // TODO: Build a command pipeline from the command and any additional command handlers
+
+            // TODO: Execute the command on the command pipeline
+
+            // TODO: Serialize the appropriate response
+
             var name = context.RouteData.Values["name"] as string;
             if (String.IsNullOrEmpty(name))
             {
