@@ -3,9 +3,9 @@
 namespace CommandRouting.Handlers
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-    public class CommandHandlerAttribute : Attribute
+    public class CommandPipelineAttribute : Attribute
     {
-        public CommandHandlerAttribute(Type handlerType)
+        public CommandPipelineAttribute(Type handlerType)
         {
         }
     }
