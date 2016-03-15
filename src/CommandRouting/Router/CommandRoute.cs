@@ -16,7 +16,7 @@ namespace CommandRouting
             Type requestType = CommandHelper.GetCommandRequestType<TCommand>();
 
             // Build a request model from the request request body
-            RequestModelParser modelParser = new RequestModelParser(context.HttpContext);
+            RequestModelActivator modelParser = new RequestModelActivator(context.HttpContext);
             object requestModel = modelParser.CreateRequestModel(requestType);
 
             // TODO: Override request model properties from any route template parameters in the request uri

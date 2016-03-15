@@ -8,11 +8,11 @@ namespace CommandRouting.Router
     /// <summary>
     /// Used to create an instance of a command request model from the body of an an HTTP Request. 
     /// </summary>
-    public class RequestModelParser
+    public class RequestModelActivator
     {
         private readonly HttpContext _httpContext;
 
-        public RequestModelParser(HttpContext httpContext)
+        public RequestModelActivator(HttpContext httpContext)
         {
             _httpContext = httpContext;
         }
@@ -28,7 +28,8 @@ namespace CommandRouting.Router
                 modelName: string.Empty,
                 modelState: new ModelStateDictionary(),
                 metadata: metadata);
-            return formatter.ReadAsync(context).Result.Model;
+            dynamic model = formatter.ReadAsync(context).Result.Model;
+            return model;
         }        
     }
 }
