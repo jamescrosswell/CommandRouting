@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using CommandRouting.Router;
+using FluentAssertions;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
 using Microsoft.AspNet.Routing;
@@ -61,5 +62,30 @@ namespace CommandRouting.UnitTests.Router
             Assert.Equal("Bar", result?.Name);
             Assert.Equal(10, result?.Ranking);
         }
+
+        [Fact]
+        public void CreateRequestModel_should_merge_message_body_and_route_data_to_create_a_command_request_model()
+        {
+            // Given an HttpRequest with a json message in the body
+            HttpContext httpContext = new DefaultHttpContext();
+            httpContext.Request.Method = "POST";
+            httpContext.Request.ContentType = "application/json";
+            httpContext.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes("{ name: 'Bar', ranking: 10 }"));
+
+            // Plus some route data
+            RouteData routeData = new RouteData();
+            routeData.Values.Add("Ranking", "42");
+
+            // When I try to bind to a request model
+            RequestModelActivator modelParser = new RequestModelActivator(httpContext, routeData);
+            object requestModel = modelParser.CreateRequestModel(typeof(Foo));
+
+            // Then the result should be an instance of Foo with all of it's properties set correctly
+            // from a combination of the message body and the route data
+            Foo result = requestModel as Foo;
+            result?.Name.Should().Be("Bar");
+            result?.Ranking.Should().Be(42);
+        }
+
     }
 }
