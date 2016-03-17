@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandRouting.Helpers;
 using CommandRouting.Router;
+using CommandRouting.Router.ValueParsers;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Routing;
 
 namespace CommandRouting
@@ -10,14 +13,21 @@ namespace CommandRouting
     public class CommandRoute<TCommand> : IRouter
         where TCommand: ICommand
     {
+
         public async Task RouteAsync(RouteContext context)
         {                        
             // Work out what kind of request model we should be dealing with
             Type requestType = CommandHelper.GetCommandRequestType<TCommand>();
 
             // Build a request model from the request request body + any route data
-            RequestModelActivator modelParser = new RequestModelActivator(context.HttpContext, context.RouteData);
-            object requestModel = modelParser.CreateRequestModel(requestType);
+            IInputFormatter inputFormatter = new JsonInputFormatter();
+            IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(context.RouteData) };
+            RequestModelActivator modelActivator = new RequestModelActivator(
+                context.HttpContext, 
+                inputFormatter, 
+                valueParsers
+                );
+            object requestModel = modelActivator.CreateRequestModel(requestType);
 
             // TODO: Override request model properties from any route template parameters in the request uri
 

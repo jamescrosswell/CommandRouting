@@ -1,9 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using CommandRouting.Router;
+using CommandRouting.Router.ValueParsers;
 using FluentAssertions;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
+using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Routing;
 using Xunit;
 
@@ -30,8 +33,10 @@ namespace CommandRouting.UnitTests.Router
             RouteData routeData = new RouteData();
 
             // When I try to bind to a request model
-            RequestModelActivator modelParser = new RequestModelActivator(httpContext, routeData);
-            object requestModel = modelParser.CreateRequestModel(typeof (Foo));
+            IInputFormatter inputFormatter = new JsonInputFormatter();
+            IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
+            RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
+            object requestModel = modelActivator.CreateRequestModel(typeof (Foo));
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             Foo result = requestModel as Foo;
@@ -54,8 +59,10 @@ namespace CommandRouting.UnitTests.Router
             routeData.Values.Add("Ranking", "10");
 
             // When I try to bind to a request model
-            RequestModelActivator modelParser = new RequestModelActivator(httpContext, routeData);
-            object requestModel = modelParser.CreateRequestModel(typeof(Foo));
+            IInputFormatter inputFormatter = new JsonInputFormatter();
+            IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
+            RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
+            object requestModel = modelActivator.CreateRequestModel(typeof(Foo));
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             Foo result = requestModel as Foo;
@@ -77,8 +84,10 @@ namespace CommandRouting.UnitTests.Router
             routeData.Values.Add("Ranking", "42");
 
             // When I try to bind to a request model
-            RequestModelActivator modelParser = new RequestModelActivator(httpContext, routeData);
-            object requestModel = modelParser.CreateRequestModel(typeof(Foo));
+            IInputFormatter inputFormatter = new JsonInputFormatter();
+            IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
+            RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
+            object requestModel = modelActivator.CreateRequestModel(typeof(Foo));
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             // from a combination of the message body and the route data
