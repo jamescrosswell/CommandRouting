@@ -11,8 +11,7 @@ namespace Sample
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
+        // This method gets called by the runtime and can be used to add services to the DI container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting();
@@ -25,9 +24,9 @@ namespace Sample
 
             RouteBuilder routeBuilder = new RouteBuilder {ServiceProvider = app.ApplicationServices};
 
-            CommandRouteBuilder pipelines = new CommandRouteBuilder(routeBuilder);
-            pipelines
-                .Pipe("hello/{name:alpha}")
+            CommandRouteBuilder commandRoutes = new CommandRouteBuilder(routeBuilder);
+            commandRoutes
+                .Route("hello/{name:alpha}")
                 .As<SayHelloRequest>()
                 .To<IgnoreBob, SayHello>();
 

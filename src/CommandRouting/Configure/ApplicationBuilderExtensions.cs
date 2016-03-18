@@ -14,7 +14,7 @@ namespace CommandRouting.Configure
     /// </summary>
     public static class ApplicationBuilderExtensions
     {
-        public static RoutePipelineBuilder Pipe(this CommandRouteBuilder builder, string routeTemplate)
+        public static RoutePipelineBuilder Route(this CommandRouteBuilder builder, string routeTemplate)
         {
             return new RoutePipelineBuilder(builder, routeTemplate);
         }
