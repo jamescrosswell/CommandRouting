@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CommandRouting;
-using CommandRouting.Router;
+﻿using System.Threading.Tasks;
+using CommandRouting.Configure;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Routing;
-using Microsoft.AspNet.Routing.Template;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Commands.SayHello;
 
@@ -29,25 +25,11 @@ namespace Sample
 
             RouteBuilder routeBuilder = new RouteBuilder {ServiceProvider = app.ApplicationServices};
 
-            // CommandPipelineBuilder pipelines = new CommandPipelineBuilder(IServiceProvider ServiceProvider);
-            // pipelines
-            //      .Pipe("hello/{name:alpha}")
-            //      .As<SayHelloRequest>()
-            //      .To<IgnoreBob, SayHello>();
-
-            // routeBuilder.AddCommandRoutes(pipelines.Build());
-
-            //routeBuilder.Routes.Add(new TemplateRoute(
-            //    new CommandRoute<SayHelloRequest>(resolve IgnoreBob, resolve SayHello),
-            //    "hello/{name:alpha}",
-            //    app.ApplicationServices.GetService<IInlineConstraintResolver>()
-            //    ));
-
-            routeBuilder.Routes.Add(new TemplateRoute(
-                new CommandRoute<SayHelloRequest>(new IgnoreBob(), new SayHello()),
-                "hello/{name:alpha}",
-                app.ApplicationServices.GetService<IInlineConstraintResolver>()
-                ));
+            CommandRouteBuilder pipelines = new CommandRouteBuilder(routeBuilder);
+            pipelines
+                .Pipe("hello/{name:alpha}")
+                .As<SayHelloRequest>()
+                .To<IgnoreBob, SayHello>();
 
             app.UseRouter(routeBuilder.Build());
 

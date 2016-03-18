@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Windows.Input;
 using CommandRouting.Handlers;
 
 namespace CommandRouting.Helpers
