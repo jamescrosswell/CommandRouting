@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace CommandRouting.Router
 {
@@ -16,14 +13,14 @@ namespace CommandRouting.Router
         /// <param name="deepName">The deep property name to be set</param>
         /// <param name="valueAsString">A string representation of the value to assign to the property</param>
         /// <returns>True if the property was set, false otherwise (typicalty that means it doesn't exist)</returns>
-        public static bool TrySetDeepPropertyStringValue(this object obj, string deepName, string valueAsString)
+        public static bool TryParseDeepPropertyValue(this object obj, string deepName, string valueAsString)
         {
-            Action<PropertyInfo, object> setConvertedValue = (property, target) =>
+            Action<PropertyInfo, object> parseAndSet = (property, target) =>
             {
                 object value = property.ParseValue(valueAsString);
                 property.SetValue(target, value);
             };
-            return ManipulateDeepProperty(obj, deepName, setConvertedValue);
+            return ManipulateDeepProperty(obj, deepName, parseAndSet);
         }
 
         public static object ParseValue(this PropertyInfo property, string value)

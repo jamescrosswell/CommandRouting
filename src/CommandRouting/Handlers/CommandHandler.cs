@@ -1,21 +1,33 @@
 namespace CommandRouting.Handlers
 {
-    public abstract class CommandHandler<TRequest, TResponse>
+    public interface ICommandHandler
     {
-        public abstract CommandHandlerResult Dispatch(TRequest request);
 
-        public const int DefaultOrder = 100;
+    }
 
-        /// <summary>
-        /// Specifies the order in which the command handler should be dispatched
-        /// </summary>
-        public virtual int Order => DefaultOrder;
+    public interface ICommandHandler<in TRequest> : ICommandHandler
+    {
+        HandlerResult Dispatch(TRequest request);
+    }
+
+    public interface ICommandHandler<in TRequest, out TResponse>: ICommandHandler<TRequest>
+    {
+    }
+
+    /// <summary>
+    /// Base class for "Request" stype handlers (i.e. command handlers that return a result)
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request model that the handler can process</typeparam>
+    /// <typeparam name="TResponse">The type of the response that the handler provides</typeparam>
+    public abstract class CommandHandler<TRequest, TResponse> : ICommandHandler<TRequest, TResponse>
+    {
+        public abstract HandlerResult Dispatch(TRequest request);
 
         /// <summary>
         /// Helper function that makes returning NotHandled result
         /// </summary>
         /// <returns>A NotHandled result</returns>
-        protected CommandHandlerResult Continue()
+        protected HandlerResult Continue()
         {
             return new NotHandled();
         }
@@ -25,9 +37,19 @@ namespace CommandRouting.Handlers
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected CommandHandlerResult Handled(TResponse response)
+        protected HandlerResult Handled(TResponse response)
         {
             return new Handled<TResponse>(response);
         }
+    }
+
+    /// <summary>
+    /// Base class for command handlers that do not need to return a result - instead they return
+    /// "Unit" (the functional equivalent of null)
+    /// </summary>
+    /// <typeparam name="TRequest">The type of the request model that the class handles</typeparam>
+    public abstract class CommandHandler<TRequest> : CommandHandler<TRequest, Unit>
+    {
+        
     }
 }

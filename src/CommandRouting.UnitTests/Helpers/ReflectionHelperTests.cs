@@ -28,7 +28,7 @@ namespace CommandRouting.UnitTests.Helpers
             };
 
             // When I set a top level property
-            entity.TrySetDeepPropertyStringValue("Top", "10");
+            entity.TryParseDeepPropertyValue("Top", "10");
 
             // Then the property should be set correctly
             Assert.Equal(10m, entity.Top);
@@ -46,7 +46,7 @@ namespace CommandRouting.UnitTests.Helpers
             };
 
             // When I set a top level property
-            entity.TrySetDeepPropertyStringValue("Nest.Bar", "Rain");
+            entity.TryParseDeepPropertyValue("Nest.Bar", "Rain");
 
             // Then the property should be set correctly
             Assert.Equal("Rain", entity.Nest.Bar);
@@ -62,7 +62,7 @@ namespace CommandRouting.UnitTests.Helpers
             };
 
             // When I set a top level property
-            entity.TrySetDeepPropertyStringValue("nest.rain", "42");
+            entity.TryParseDeepPropertyValue("nest.rain", "42");
 
             // Then the property should be set correctly
             Assert.Equal(42, entity.Nest.Rain);
@@ -86,7 +86,7 @@ namespace CommandRouting.UnitTests.Helpers
             };
 
             // When I set a top level property
-            bool result = entity.TrySetDeepPropertyStringValue("nest.wtf", "42");
+            bool result = entity.TryParseDeepPropertyValue("nest.wtf", "42");
 
             // Then SetDeepPropertyValue should return false
             result.Should().BeFalse();

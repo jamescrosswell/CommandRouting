@@ -1,25 +1,27 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using CommandRouting.Helpers;
-using CommandRouting.Router;
+using CommandRouting.Handlers;
+using CommandRouting.Router.Serialization;
 using CommandRouting.Router.ValueParsers;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Routing;
 
-namespace CommandRouting
+namespace CommandRouting.Router
 {
-    public class CommandRoute<TCommand> : IRouter
-        where TCommand: ICommand
+    public class CommandRoute<TRequest> : IRouter
     {
+        private readonly IList<ICommandHandler<TRequest>> _pipeline;
+        public CommandRoute(params ICommandHandler<TRequest>[] pipeline)
+        {
+            _pipeline = pipeline.ToList();
+        }
 
         public async Task RouteAsync(RouteContext context)
         {                        
-            // Work out what kind of request model we should be dealing with
-            Type requestType = CommandHelper.GetCommandRequestType<TCommand>();
-
-            // Build a request model from the request request body + any route data
+            // Build a request model from the request 
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(context.RouteData) };
             RequestModelActivator modelActivator = new RequestModelActivator(
@@ -27,23 +29,24 @@ namespace CommandRouting
                 inputFormatter, 
                 valueParsers
                 );
-            object requestModel = modelActivator.CreateRequestModel(requestType);
+            TRequest requestModel = modelActivator.CreateRequestModel<TRequest>();
 
-            // TODO: Override request model properties from any route template parameters in the request uri
-
-            // TODO: Build a command pipeline from the command and any additional command handlers
-
-            // TODO: Execute the command on the command pipeline
-
-            // TODO: Serialize the appropriate response
-
-            var name = context.RouteData.Values["name"] as string;
-            if (String.IsNullOrEmpty(name))
+            // Run the command through our command pipeline until it gets handled
+            foreach (var handler in _pipeline)
             {
-                return;
+                IHandlerResult handlerResult = handler.Dispatch(requestModel);
+                if (handlerResult.IsHandled)
+                {
+                    // Serialize the response model 
+                    IOutputFormatter outputFormatter = new JsonOutputFormatter();
+                    ResponseWriter responseWriter = new ResponseWriter(context.HttpContext, outputFormatter);
+                    responseWriter.SerializeResponse(handlerResult);
+
+                    // Let OWIN know our middleware handled the request
+                    context.IsHandled = true;
+                    break;
+                }
             }
-            await context.HttpContext.Response.WriteAsync($"Hi {name}!");
-            context.IsHandled = true;
         }
 
         public VirtualPathData GetVirtualPath(VirtualPathContext context)

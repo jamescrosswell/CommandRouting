@@ -1,4 +1,5 @@
 ﻿using System;
+using CommandRouting.Handlers;
 using CommandRouting.Helpers;
 using Xunit;
 
@@ -6,11 +7,11 @@ namespace CommandRouting.UnitTests.Helpers
 {
     public class CommandHelperTests
     {
-        public class SampleCommand : ICommand<int, string>
+        public class SampleCommand : ICommandHandler<int, string>
         {
-            public string Execute(int request)
+            public HandlerResult Dispatch(int request)
             {
-                return $"You asked for { request }";
+                throw new NotImplementedException();
             }
         }
 

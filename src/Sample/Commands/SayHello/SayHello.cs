@@ -1,29 +1,28 @@
-﻿using CommandRouting;
-using CommandRouting.Handlers;
+﻿using CommandRouting.Handlers;
 
 namespace Sample.Commands.SayHello
 {
-    public class SayHello
+    public class SayHelloRequest
     {
         public string Name { get; set; }
     }
 
-    public class IgnoreBob : CommandHandler<SayHello, string>
+    public class IgnoreBob : CommandHandler<SayHelloRequest, string>
     {
-        public override CommandHandlerResult Dispatch(SayHello request)
+        public override HandlerResult Dispatch(SayHelloRequest request)
         {
-            return request.Name == "Bob" 
+            return request.Name.ToLowerInvariant() == "bob" 
                 ? Handled($"I don't want to talk to you { request.Name }") 
                 : Continue();
         }
     }
 
     [CommandPipeline(typeof(IgnoreBob))]
-    public class SayHelloCommand : ICommand<SayHello, string>
+    public class SayHello : CommandHandler<SayHelloRequest, string>
     {
-        public string Execute(SayHello request)
+        public override HandlerResult Dispatch(SayHelloRequest request)
         {
-            return $"Hello {request.Name}";
+            return Handled($"Hello {request.Name}");
         }
     }
 }

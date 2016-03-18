@@ -24,7 +24,7 @@ namespace CommandRouting.Router.ValueParsers
             // For each route value, check to see if we can assign the value to our request model
             foreach (var kvp in _routeData.Values)
             {
-                requestModel.TrySetDeepPropertyStringValue(kvp.Key, kvp.Value as string);
+                requestModel.TryParseDeepPropertyValue(kvp.Key, kvp.Value as string);
             }
         }
     }

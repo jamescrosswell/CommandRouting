@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CommandRouting.Router.Deserializers;
+using CommandRouting.Router.Serialization;
 using CommandRouting.Router.ValueParsers;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Formatters;
@@ -40,16 +40,16 @@ namespace CommandRouting.Router
         /// Create a request model by first deserializing the message body and then parsing properties from
         /// values (such as route data)
         /// </summary>
-        /// <param name="requestType">
-        /// The type of the request model that we want to create. This will need to have a parameterless 
-        /// constructor.
-        /// </param>
+        /// <typeparam name="TRequest">
+        /// The type of the request model that we want to create. 
+        /// </typeparam>
         /// <returns>An instance of Type requestType</returns>
-        public object CreateRequestModel(Type requestType)
+        public TRequest CreateRequestModel<TRequest>()
         {
             // Try to deserialize the message body to the appropriate request model or create a default instance
-            var deserializer = new RequestDeserializer(_httpContext, _inputFormatter);
-            dynamic model = deserializer.DeserializeMessage(requestType) ?? Activator.CreateInstance(requestType);
+            Type requestType = typeof (TRequest);
+            var requestReader = new RequestReader(_httpContext, _inputFormatter);
+            dynamic model = requestReader.DeserializeRequest(requestType) ?? Activator.CreateInstance(requestType);
 
             // Merge in any values from the value parsers
             foreach (var parser in _valueParsers)
@@ -58,7 +58,7 @@ namespace CommandRouting.Router
             }
 
             // Return the result
-            return model;
+            return (TRequest)model;
         }
 
     }

@@ -21,3 +21,6 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("3f17bec2-92a1-4e5d-bfc0-a48b62280ec8")]
+
+// Make internal members accessible to unit test assemblies 
+[assembly: InternalsVisibleTo("CommandRouting.UnitTests")]

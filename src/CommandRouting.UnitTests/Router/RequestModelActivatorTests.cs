@@ -36,7 +36,7 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel(typeof (Foo));
+            object requestModel = modelActivator.CreateRequestModel<Foo>();
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             Foo result = requestModel as Foo;
@@ -62,7 +62,7 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel(typeof(Foo));
+            object requestModel = modelActivator.CreateRequestModel<Foo>();
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             Foo result = requestModel as Foo;
@@ -87,7 +87,7 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel(typeof(Foo));
+            object requestModel = modelActivator.CreateRequestModel<Foo>();
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             // from a combination of the message body and the route data

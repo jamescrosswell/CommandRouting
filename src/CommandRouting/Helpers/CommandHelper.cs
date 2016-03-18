@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Windows.Input;
+using CommandRouting.Handlers;
 
 namespace CommandRouting.Helpers
 {
@@ -9,17 +11,18 @@ namespace CommandRouting.Helpers
         {
             var genericCommandInterface = commandType
                 .GetInterfaces()
-                .First(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommand<,>));
+                .First(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommandHandler<,>));
             return genericCommandInterface.GetGenericArguments();
         }
 
         public static Type GetCommandRequestType<TCommand>()
-            where TCommand: ICommand
+            where TCommand: ICommandHandler
         {
             return CommandTypeArguments(typeof(TCommand)).First();
         }
 
         public static Type GetCommandResponseType<TCommand>()
+            where TCommand : ICommandHandler
         {
             return CommandTypeArguments(typeof(TCommand)).Last();
         }

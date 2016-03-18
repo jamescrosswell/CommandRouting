@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CommandRouting;
+using CommandRouting.Router;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
@@ -27,11 +28,27 @@ namespace Sample
             app.UseIISPlatformHandler();
 
             RouteBuilder routeBuilder = new RouteBuilder {ServiceProvider = app.ApplicationServices};
+
+            // CommandPipelineBuilder pipelines = new CommandPipelineBuilder(IServiceProvider ServiceProvider);
+            // pipelines
+            //      .Pipe("hello/{name:alpha}")
+            //      .As<SayHelloRequest>()
+            //      .To<IgnoreBob, SayHello>();
+
+            // routeBuilder.AddCommandRoutes(pipelines.Build());
+
+            //routeBuilder.Routes.Add(new TemplateRoute(
+            //    new CommandRoute<SayHelloRequest>(resolve IgnoreBob, resolve SayHello),
+            //    "hello/{name:alpha}",
+            //    app.ApplicationServices.GetService<IInlineConstraintResolver>()
+            //    ));
+
             routeBuilder.Routes.Add(new TemplateRoute(
-                new CommandRoute<SayHelloCommand>(),
+                new CommandRoute<SayHelloRequest>(new IgnoreBob(), new SayHello()),
                 "hello/{name:alpha}",
                 app.ApplicationServices.GetService<IInlineConstraintResolver>()
                 ));
+
             app.UseRouter(routeBuilder.Build());
 
             app.Run(HelloWorld);
