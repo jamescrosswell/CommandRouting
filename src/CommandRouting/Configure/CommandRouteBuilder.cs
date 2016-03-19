@@ -23,19 +23,18 @@ namespace CommandRouting.Configure
 
         internal void AddRoute<TRequest>(string routeTemplate, Type[] commandHandlerTypes)
         {
-
             var serviceProvider = _routeBuilder.ServiceProvider;
 
             // Instanciate concrete instances for each handler in the command pipeline
             var pipeline = new List<ICommandHandler<TRequest>>();
             foreach (Type handlerType in commandHandlerTypes)
             {
-                ICommandHandler<TRequest> handler = (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(serviceProvider, handlerType);
+                var handler = (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(serviceProvider, handlerType);
                 pipeline.Add(handler);
             }
 
             // Register a route for the command pipeline
-            var constraintsResolver = (IInlineConstraintResolver)serviceProvider.GetService(typeof(IInlineConstraintResolver));
+            var constraintsResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             _routeBuilder.Routes.Add(new TemplateRoute(
                 new CommandRoute<TRequest>(pipeline.ToArray()),
                 routeTemplate,

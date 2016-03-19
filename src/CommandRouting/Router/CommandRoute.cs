@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using CommandRouting.Handlers;
 using CommandRouting.Router.Serialization;
 using CommandRouting.Router.ValueParsers;
-using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Routing;
 
