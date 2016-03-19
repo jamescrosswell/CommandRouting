@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommandRouting.Router.Serialization;
 using CommandRouting.Router.ValueParsers;
 using Microsoft.AspNet.Http;
@@ -44,12 +45,11 @@ namespace CommandRouting.Router
         /// The type of the request model that we want to create. 
         /// </typeparam>
         /// <returns>An instance of Type requestType</returns>
-        public TRequest CreateRequestModel<TRequest>()
+        public async Task<TRequest> CreateRequestModelAsync<TRequest>()
         {
             // Try to deserialize the message body to the appropriate request model or create a default instance
-            Type requestType = typeof (TRequest);
             var requestReader = new RequestReader(_httpContext, _inputFormatter);
-            dynamic model = requestReader.DeserializeRequest(requestType) ?? Activator.CreateInstance(requestType);
+            var model = await requestReader.DeserializeRequestAsync<TRequest>();
 
             // Merge in any values from the value parsers
             foreach (var parser in _valueParsers)

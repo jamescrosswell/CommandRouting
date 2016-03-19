@@ -27,7 +27,7 @@ namespace CommandRouting.Router
                 inputFormatter, 
                 valueParsers
                 );
-            TRequest requestModel = modelActivator.CreateRequestModel<TRequest>();
+            TRequest requestModel = await modelActivator.CreateRequestModelAsync<TRequest>();
 
             // Run the command through our command pipeline until it gets handled
             foreach (var handler in _pipeline)

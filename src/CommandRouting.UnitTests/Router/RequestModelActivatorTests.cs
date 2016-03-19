@@ -36,10 +36,10 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel<Foo>();
+            var requestModel = modelActivator.CreateRequestModelAsync<Foo>().Result;
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
-            Foo result = requestModel as Foo;
+            Foo result = requestModel;
             Assert.Equal("Bar", result?.Name);
             Assert.Equal(10, result?.Ranking);
         }
@@ -62,10 +62,10 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel<Foo>();
+            var requestModel = modelActivator.CreateRequestModelAsync<Foo>().Result;
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
-            Foo result = requestModel as Foo;
+            Foo result = requestModel;
             Assert.Equal("Bar", result?.Name);
             Assert.Equal(10, result?.Ranking);
         }
@@ -87,11 +87,11 @@ namespace CommandRouting.UnitTests.Router
             IInputFormatter inputFormatter = new JsonInputFormatter();
             IEnumerable<IValueParser> valueParsers = new List<IValueParser> { new RouteValueParser(routeData) };
             RequestModelActivator modelActivator = new RequestModelActivator(httpContext, inputFormatter, valueParsers);
-            object requestModel = modelActivator.CreateRequestModel<Foo>();
+            var requestModel = modelActivator.CreateRequestModelAsync<Foo>().Result;
 
             // Then the result should be an instance of Foo with all of it's properties set correctly
             // from a combination of the message body and the route data
-            Foo result = requestModel as Foo;
+            Foo result = requestModel;
             result?.Name.Should().Be("Bar");
             result?.Ranking.Should().Be(42);
         }
