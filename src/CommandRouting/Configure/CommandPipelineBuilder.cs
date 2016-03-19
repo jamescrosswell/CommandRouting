@@ -19,6 +19,7 @@ namespace CommandRouting.Configure
         private void RegisterRoute(params Type[] commandHandlerTypes)
         {
             RoutePipelineBuilder.CommandRouteBuilder.AddRoute<TRequest>(
+                RoutePipelineBuilder.Verb,
                 RoutePipelineBuilder.RouteTemplate,
                 commandHandlerTypes
                 );
@@ -31,12 +32,12 @@ namespace CommandRouting.Configure
         /// with the generic To overrides (e.g. if you want more than 9 handlers in a pipeline).
         /// </summary>
         /// <param name="handlers"></param>
-        public void To(params Type[] handlers)
+        public void RoutesTo(params Type[] handlers)
         {
             RegisterRoute(handlers);
         }
 
-        public void To<THandler01>()
+        public void RoutesTo<THandler01>()
             where THandler01 : ICommandHandler<TRequest>
         {
             RegisterRoute(
@@ -44,7 +45,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02>()
+        public void RoutesTo<THandler01, THandler02>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
         {
@@ -53,7 +54,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03>()
+        public void RoutesTo<THandler01, THandler02, THandler03>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -63,7 +64,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -74,7 +75,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04, THandler05>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -86,7 +87,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -100,7 +101,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -115,7 +116,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08>()
             where THandler01 : ICommandHandler<TRequest>
             where THandler02 : ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>
@@ -131,7 +132,7 @@ namespace CommandRouting.Configure
                 );
         }
 
-        public void To<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08, THandler09>()
+        public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08, THandler09>()
             where THandler01: ICommandHandler<TRequest>
             where THandler02: ICommandHandler<TRequest>
             where THandler03 : ICommandHandler<TRequest>

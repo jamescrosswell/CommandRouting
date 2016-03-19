@@ -11,10 +11,10 @@ namespace CommandRouting.Router
 {
     public class CommandRoute<TRequest> : IRouter
     {
-        private readonly IList<ICommandHandler<TRequest>> _pipeline;
-        public CommandRoute(params ICommandHandler<TRequest>[] pipeline)
+        private readonly CommandPipeline<TRequest> _pipeline;
+        public CommandRoute(CommandPipeline<TRequest> pipeline)
         {
-            _pipeline = pipeline.ToList();
+            _pipeline = pipeline;
         }
 
         public async Task RouteAsync(RouteContext context)
@@ -29,21 +29,19 @@ namespace CommandRouting.Router
                 );
             TRequest requestModel = await modelActivator.CreateRequestModelAsync<TRequest>();
 
-            // Run the command through our command pipeline until it gets handled
-            foreach (var handler in _pipeline)
-            {
-                IHandlerResult handlerResult = handler.Dispatch(requestModel);
-                if (handlerResult.IsHandled)
-                {
-                    // Serialize the response model 
-                    IOutputFormatter outputFormatter = new JsonOutputFormatter();
-                    ResponseWriter responseWriter = new ResponseWriter(context.HttpContext, outputFormatter);
-                    responseWriter.SerializeResponse(handlerResult);
+            // Run the request through our command pipeline
+            IHandlerResult pipelineResult = _pipeline.Dispatch(context.HttpContext, requestModel);
 
-                    // Let OWIN know our middleware handled the request
-                    context.IsHandled = true;
-                    break;
-                }
+            // If the request was handled by our pipeline then write the response out
+            if (pipelineResult.IsHandled)
+            {
+                // Serialize the response model 
+                IOutputFormatter outputFormatter = new JsonOutputFormatter();
+                ResponseWriter responseWriter = new ResponseWriter(context.HttpContext, outputFormatter);
+                await responseWriter.SerializeResponseAsync(pipelineResult);
+
+                // Let OWIN know our middleware handled the request
+                context.IsHandled = true;
             }
         }
 

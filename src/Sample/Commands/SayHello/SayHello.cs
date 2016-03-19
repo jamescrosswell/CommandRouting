@@ -2,7 +2,6 @@
 
 namespace Sample.Commands.SayHello
 {
-    [CommandPipeline(typeof(IgnoreBob))]
     public class SayHello : CommandHandler<SayHelloRequest, string>
     {
         public override HandlerResult Dispatch(SayHelloRequest request)

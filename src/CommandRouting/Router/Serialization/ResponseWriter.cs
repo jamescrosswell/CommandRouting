@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using CommandRouting.Handlers;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Formatters;
@@ -31,7 +32,7 @@ namespace CommandRouting.Router.Serialization
         /// Creates an appropriate HttpResponse from our command handler result
         /// </summary>
         /// <param name="handlerResult">The command handler result that we need to create ah HttpResponse from</param>
-        public void SerializeResponse(IHandlerResult handlerResult)
+        public async Task SerializeResponseAsync(IHandlerResult handlerResult)
         {
             // Set the status code on the response
             var httpResponseResult = handlerResult as IHttpResponseResult;
@@ -50,7 +51,7 @@ namespace CommandRouting.Router.Serialization
                 handlerResult.Response);
 
             // Use our writer to write a reponse body
-            _outputFormatter.WriteAsync(formatterContext).Wait();
+            await _outputFormatter.WriteAsync(formatterContext);
         }
     }
 }

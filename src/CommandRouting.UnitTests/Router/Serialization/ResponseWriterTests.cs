@@ -38,8 +38,7 @@ namespace CommandRouting.UnitTests.Router.Serialization
 
             // When I try to write the response out to the http context
             ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
-            responseWriter.SerializeResponse(handlerResult);
-
+            responseWriter.SerializeResponseAsync(handlerResult).Wait();
 
             // Then the status code of the HttpReponse should be set correctly
             httpContext.Response.StatusCode.Should().Be((int) HttpStatusCode.BadRequest);
@@ -57,45 +56,11 @@ namespace CommandRouting.UnitTests.Router.Serialization
 
             // When I try to write the response out to the http context
             ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
-            responseWriter.SerializeResponse(handlerResult);
+            responseWriter.SerializeResponseAsync(handlerResult).Wait();
 
 
             // Then the status code of the HttpReponse should be set correctly
             httpContext.Response.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        }
-
-        [Fact]
-        public void SerializeResponse_should_serialize_the_response_object_to_the_message_body()
-        {
-            // Given an HttpContext 
-            HttpContext httpContext = new DefaultHttpContext();
-            httpContext.Request.ContentType = "application/json";
-
-            // And an Handled result
-            Foo foo = new Foo()
-            {
-                Name = "Bar",
-                Ranking = 42
-            };
-            IHandlerResult handlerResult = new Handled<Foo>(foo);
-
-            // When I try to write the response out to the http context
-            ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
-            responseWriter.SerializeResponse(handlerResult);
-
-
-            // Then the status code of the HttpReponse should be OK
-            httpContext.Response.StatusCode.Should().Be((int)HttpStatusCode.OK);
-
-            // And the command response should have been written to the response stream
-            string resultText;
-            httpContext.Response.Body.Position = 0;
-            using (var reader = new StreamReader(httpContext.Response.Body))
-            {
-                resultText = reader.ReadToEnd();
-            }
-            resultText.Should().Be("{ name: \"Bar\", ranking: 42 }");
-
         }
     }
 }

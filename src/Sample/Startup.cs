@@ -25,10 +25,16 @@ namespace Sample
             RouteBuilder routeBuilder = new RouteBuilder {ServiceProvider = app.ApplicationServices};
 
             CommandRouteBuilder commandRoutes = new CommandRouteBuilder(routeBuilder);
+
             commandRoutes
-                .Route("hello/{name:alpha}")
+                .Get("hello/{name:alpha}")
                 .As<SayHelloRequest>()
-                .To<IgnoreBob, SayHello>();
+                .RoutesTo<IgnoreBob, SayHello>();
+
+            commandRoutes
+                .Post("hello")
+                .As<SayHelloRequest>()
+                .RoutesTo<PostHello>();
 
             app.UseRouter(routeBuilder.Build());
 
