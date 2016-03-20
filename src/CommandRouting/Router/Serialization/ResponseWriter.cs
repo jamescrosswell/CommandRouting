@@ -35,8 +35,8 @@ namespace CommandRouting.Router.Serialization
         public async Task SerializeResponseAsync(IHandlerResult handlerResult)
         {
             // Set the status code on the response
-            var httpResponseResult = handlerResult as IHttpResponseResult;
-            var status = httpResponseResult?.Status ?? HttpStatusCode.OK;
+            var httpResponse = handlerResult as IHttpResponse;
+            var status = httpResponse?.Status ?? HttpStatusCode.OK;
             _httpContext.Response.StatusCode = (int)status;
 
             // If the response type is is null or Unit, then don't do anything since we have nothing to serialize

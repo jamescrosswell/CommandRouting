@@ -45,12 +45,12 @@ namespace CommandRouting.Router
             {
                 try
                 {
-                    // TODO: We could probably log this in some kind of binding errors collection
                     operation(info, source);
                     return true;
                 }
                 catch
                 {
+                    // TODO: We could probably log this in some kind of binding errors collection
                     return false;
                 }
             }

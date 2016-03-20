@@ -27,14 +27,14 @@ namespace CommandRouting.UnitTests.Router.Serialization
             );
 
         [Fact]
-        public void SerializeResponse_should_set_status_code_from_IHttpResponseResult()
+        public void SerializeResponse_should_set_status_code_from_IHttpResponse()
         {
             // Given an HttpContext 
             HttpContext httpContext = new DefaultHttpContext();
             httpContext.Request.ContentType = "application/json";
 
-            // And and IHttpResponseResult
-            IHandlerResult handlerResult = new HttpResponseResult(HttpStatusCode.BadRequest);
+            // And and IHttpResponse
+            IHandlerResult handlerResult = new Handlers.HttpResponse(HttpStatusCode.BadRequest);
 
             // When I try to write the response out to the http context
             ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
@@ -45,7 +45,7 @@ namespace CommandRouting.UnitTests.Router.Serialization
         }
 
         [Fact]
-        public void SerializeResponse_should_assume_status_code_200_for_non_IHttpResponseResult()
+        public void SerializeResponse_should_assume_status_code_200_for_non_IHttpResponse()
         {
             // Given an HttpContext 
             HttpContext httpContext = new DefaultHttpContext();

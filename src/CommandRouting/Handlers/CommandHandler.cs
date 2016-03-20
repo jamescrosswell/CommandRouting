@@ -1,19 +1,5 @@
 namespace CommandRouting.Handlers
 {
-    public interface ICommandHandler
-    {
-
-    }
-
-    public interface ICommandHandler<in TRequest> : ICommandHandler
-    {
-        HandlerResult Dispatch(TRequest request);
-    }
-
-    public interface ICommandHandler<in TRequest, out TResponse>: ICommandHandler<TRequest>
-    {
-    }
-
     /// <summary>
     /// Base class for "Request" stype handlers (i.e. command handlers that return a result)
     /// </summary>
@@ -50,6 +36,9 @@ namespace CommandRouting.Handlers
     /// <typeparam name="TRequest">The type of the request model that the class handles</typeparam>
     public abstract class CommandHandler<TRequest> : CommandHandler<TRequest, Unit>
     {
-        
+        protected HandlerResult Handled()
+        {
+            return base.Handled(Unit.Result);
+        }
     }
 }
