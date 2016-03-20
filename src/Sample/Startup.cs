@@ -3,7 +3,6 @@ using CommandRouting.Configure;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Sample.Commands.SayHello;
 
@@ -22,9 +21,7 @@ namespace Sample
         {
             app.UseIISPlatformHandler();
 
-            RouteBuilder routeBuilder = new RouteBuilder {ServiceProvider = app.ApplicationServices};
-
-            CommandRouteBuilder commandRoutes = new CommandRouteBuilder(routeBuilder);
+            var commandRoutes = new CommandRouteBuilder(app.ApplicationServices);
 
             commandRoutes
                 .Get("hello/{name:alpha}")
@@ -36,7 +33,7 @@ namespace Sample
                 .As<SayHelloRequest>()
                 .RoutesTo<PostHello>();
 
-            app.UseRouter(routeBuilder.Build());
+            app.UseRouter(commandRoutes.Build());
 
             app.Run(HelloWorld);
         }
