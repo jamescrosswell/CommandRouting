@@ -12,35 +12,44 @@ namespace CommandRouting.Configure
     /// Provide extensions to register command handlers automatically with the
     /// dependency injection container
     /// </summary>
-    public class CommandRouteBuilder
+    public class CommandRouteBuilder : IRouteBuilder
     {
-        private readonly IRouteBuilder _routeBuilder;
+        public IRouter DefaultHandler { get; set; }
+        public IServiceProvider ServiceProvider { get; }
+        public IList<IRouter> Routes { get; }
 
-        public CommandRouteBuilder(IRouteBuilder routeBuilder)
+        public CommandRouteBuilder(IServiceProvider serviceProvider)
         {
-            _routeBuilder = routeBuilder;
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
+            ServiceProvider = serviceProvider;
+            Routes = new List<IRouter>();
         }
 
         internal void AddRoute<TRequest>(HttpVerb verb, string routeTemplate, Type[] commandHandlerTypes)
         {
-            var serviceProvider = _routeBuilder.ServiceProvider;
-
             // Instanciate concrete instances for each handler in the command pipeline
             CommandPipeline<TRequest> pipeline = new CommandPipeline<TRequest>(verb);
             foreach (Type handlerType in commandHandlerTypes)
             {
-                var handler = (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(serviceProvider, handlerType);
+                var handler = (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(ServiceProvider, handlerType);
                 pipeline.AddHandler(handler);
             }
 
             // Register a route for the command pipeline
-            var constraintsResolver = serviceProvider.GetService<IInlineConstraintResolver>();
-            _routeBuilder.Routes.Add(new TemplateRoute(
+            var constraintsResolver = ServiceProvider.GetService<IInlineConstraintResolver>();
+            Routes.Add(new TemplateRoute(
                 new CommandRoute<TRequest>(pipeline),
                 routeTemplate,
                 constraintsResolver
                 ));
+        }
 
+        public IRouter Build()
+        {
+            var routeCollection = new RouteCollection();
+            foreach (var router in Routes)
+                routeCollection.Add(router);
+            return routeCollection;
         }
     }
 }
