@@ -1,16 +1,9 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using CommandRouting.Handlers;
 using CommandRouting.Router;
-using CommandRouting.Router.ValueParsers;
 using FluentAssertions;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
-using Microsoft.AspNet.Mvc.Formatters;
-using Microsoft.AspNet.Routing;
 using Xunit;
 
 namespace CommandRouting.UnitTests.Router

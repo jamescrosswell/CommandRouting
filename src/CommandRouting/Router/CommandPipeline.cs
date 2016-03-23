@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CommandRouting.Handlers;
-using CommandRouting.Router.Serialization;
 using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
-using Microsoft.AspNet.Routing;
 
 namespace CommandRouting.Router
 {

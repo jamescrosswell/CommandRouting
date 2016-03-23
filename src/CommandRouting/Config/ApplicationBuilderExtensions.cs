@@ -1,6 +1,6 @@
 using CommandRouting.Router;
 
-namespace CommandRouting.Configure
+namespace CommandRouting.Config
 {
     /// <summary>
     /// Extensions that give us our fluent syntax for building command routes:

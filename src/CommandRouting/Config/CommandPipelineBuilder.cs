@@ -1,7 +1,7 @@
 using System;
 using CommandRouting.Handlers;
 
-namespace CommandRouting.Configure
+namespace CommandRouting.Config
 {
     public class CommandPipelineBuilder<TRequest>
     {

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using CommandRouting.Configure;
+using CommandRouting.Config;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
@@ -14,6 +14,7 @@ namespace Sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRouting();
+            services.AddCommandRouting();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

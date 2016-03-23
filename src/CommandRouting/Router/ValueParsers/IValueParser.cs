@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+using Microsoft.AspNet.Routing;
 
 namespace CommandRouting.Router.ValueParsers
 {
     public interface IValueParser
     {
-        void ParseValues(object requestModel);
+        void ParseValues(RouteData routeData, object requestModel);
     }
 }

@@ -1,6 +1,6 @@
 using CommandRouting.Router;
 
-namespace CommandRouting.Configure
+namespace CommandRouting.Config
 {
     public class RoutePipelineBuilder
     {

@@ -1,46 +1,47 @@
 using System;
 using System.Threading.Tasks;
+using CommandRouting.Helpers;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Formatters;
-using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace CommandRouting.Router.Serialization
 {
-    internal class RequestReader
+    public interface IRequestReader
     {
-        private readonly IInputFormatter _inputFormatter;
-        private readonly HttpContext _httpContext;
-
-        public RequestReader(HttpContext httpContext, IInputFormatter inputFormatter)
-        {
-            _httpContext = httpContext;
-            _inputFormatter = inputFormatter;
-        }
-
         /// <summary>
         /// Deserialize the request model from the message body
         /// </summary>
-        /// <param name="requestType">The type of the request model that we will try to activate</param>
+        /// <typeparam name="TRequest">The type of the request model that we will try to activate</typeparam>
+        /// <param name="httpContext">The http context of the request that we want to deserialize</param>
         /// <returns>An instance of requestType</returns>
-        public async Task<object> DeserializeRequestAsync(Type requestType)
-        {
-            // First create a context so that our formatter knows how to deserialize the model
-            var context = new InputFormatterContext(
-                _httpContext,
-                string.Empty,
-                new ModelStateDictionary(),
-                requestType.MetaData()
-                );
+        Task<TRequest> DeserializeRequestAsync<TRequest>(HttpContext httpContext);
+    }
 
-            // Finally, have the formatter return a model from the http request body
-            var inputFormatterResult = await _inputFormatter.ReadAsync(context);
-            return inputFormatterResult.Model ?? Activator.CreateInstance(requestType);
+    public class RequestReader : IRequestReader
+    {
+        private readonly IInputFormatSelector _inputFormatSelector;
+
+        public RequestReader(IInputFormatSelector inputFormatSelector)
+        {
+
+            if (inputFormatSelector == null)
+                throw new ArgumentNullException(nameof(inputFormatSelector));
+            _inputFormatSelector = inputFormatSelector;
         }
 
-        public async Task<TRequest> DeserializeRequestAsync<TRequest>()
+        /// <inheritdoc />
+        public async Task<TRequest> DeserializeRequestAsync<TRequest>(HttpContext httpContext)
         {
-            var model = await DeserializeRequestAsync(typeof(TRequest));
-            return (TRequest)model;
+            if (httpContext == null)
+                throw new ArgumentNullException(nameof(httpContext));
+
+            // Work out what input format to use
+            InputFormatterContext formatContext = httpContext.InputFormatterContext<TRequest>();
+            IInputFormatter inputFormatter = _inputFormatSelector.GetFormatterForContext(formatContext);
+
+            // Have the formatter dezerialize a model from the http request body
+            var inputFormatterResult = await inputFormatter.ReadAsync(formatContext);
+            return (TRequest)(inputFormatterResult.Model ?? Activator.CreateInstance<TRequest>());
         }
     }
 }

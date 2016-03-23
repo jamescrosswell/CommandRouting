@@ -1,5 +1,4 @@
-﻿using System.Net;
-using CommandRouting.Handlers;
+﻿using CommandRouting.Handlers;
 
 namespace Sample.Commands.SayHello
 {
