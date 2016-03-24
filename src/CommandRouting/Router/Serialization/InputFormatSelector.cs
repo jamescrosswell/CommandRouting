@@ -1,31 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using CommandRouting.Helpers;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace CommandRouting.Router.Serialization
 {
-    public interface IInputFormatSelector
+    public static class InputFormatSelector
     {
-        IInputFormatter GetFormatterForContext(InputFormatterContext context);
-    }
-
-    public class InputFormatSelector : IInputFormatSelector
-    {
-        private readonly IEnumerable<IInputFormatter> _inputFormatters;
-
-        public InputFormatSelector(IEnumerable<IInputFormatter> inputFormatters)
+        internal static IInputFormatter GetBestFormatter(this IEnumerable<IInputFormatter> inputFormatters, InputFormatterContext context)
         {
-            if (inputFormatters == null)
-                throw new ArgumentNullException(nameof(inputFormatters));
+            Ensure.NotNull(inputFormatters, nameof(inputFormatters));
 
-            _inputFormatters = inputFormatters;
+            // Convert to an array, to avoid multiple enumeration
+            var formatters = inputFormatters as IInputFormatter[] ?? inputFormatters.ToArray();
+
+            // Now get the best formatter (we'll use the first one if we can't find anything better)
+            IInputFormatter bestFormatter = formatters.FirstOrDefault(x => x.CanRead(context));
+            return bestFormatter ?? formatters.FirstOrDefault();
         }
 
-        public IInputFormatter GetFormatterForContext(InputFormatterContext context)
+        /// <summary>
+        /// Creates a default input format context (no model state and no model name) for 
+        /// a <typeparamref name="TRequest"/> model 
+        /// </summary>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        internal static InputFormatterContext InputFormatterContext<TRequest>(this HttpContext context)
         {
-            IInputFormatter bestFormatter = _inputFormatters.FirstOrDefault(x => x.CanRead(context));
-            return bestFormatter ?? _inputFormatters.FirstOrDefault();
+            return new InputFormatterContext(
+                context,
+                string.Empty,
+                new ModelStateDictionary(),
+                typeof(TRequest).MetaData()
+                );
         }
     }
 }

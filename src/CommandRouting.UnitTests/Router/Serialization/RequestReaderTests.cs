@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CommandRouting.Helpers;
 using CommandRouting.Router.Serialization;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
@@ -27,14 +24,11 @@ namespace CommandRouting.UnitTests.Router.Serialization
             inputFormatter
                 .ReadAsync(Arg.Any<InputFormatterContext>())
                 .Returns(inputFormatterResult);
-            IInputFormatSelector inputSelector = Substitute.For<IInputFormatSelector>();
-            inputSelector
-                .GetFormatterForContext(Arg.Any<InputFormatterContext>())
-                .Returns(inputFormatter);
+
 
             // When I deserialize a request
             HttpContext httpContext = new DefaultHttpContext();
-            RequestReader requestReader = new RequestReader(inputSelector);
+            RequestReader requestReader = new RequestReader(inputFormatter.ArrayOfOne());
             Foo result = requestReader.DeserializeRequestAsync<Foo>(httpContext).Result;
 
             // Then the input formatter should be used to read the model

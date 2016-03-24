@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CommandRouting.Router.ValueParsers;
+﻿using CommandRouting.Router.ValueParsers;
 using FluentAssertions;
 using Microsoft.AspNet.Routing;
 using Xunit;

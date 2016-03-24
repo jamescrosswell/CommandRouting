@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using CommandRouting.Handlers;
 using CommandRouting.Router.Serialization;
 using FluentAssertions;
@@ -18,12 +19,16 @@ namespace CommandRouting.UnitTests.Router.Serialization
             public int Ranking { get; set; }
         }
 
-        private static IOutputFormatter OutputFormatter => new JsonOutputFormatter(
+        private static IEnumerable<IOutputFormatter> OutputFormatters()
+        {
+            yield return new JsonOutputFormatter(
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
                 }
             );
+        }
+
 
         [Fact]
         public void SerializeResponse_should_set_status_code_from_IHttpResponse()
@@ -36,8 +41,8 @@ namespace CommandRouting.UnitTests.Router.Serialization
             IHandlerResult handlerResult = new Handlers.HttpResponse(HttpStatusCode.BadRequest);
 
             // When I try to write the response out to the http context
-            ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
-            responseWriter.SerializeResponseAsync(handlerResult).Wait();
+            ResponseWriter responseWriter = new ResponseWriter(OutputFormatters());
+            responseWriter.SerializeResponseAsync(handlerResult, httpContext).Wait();
 
             // Then the status code of the HttpReponse should be set correctly
             httpContext.Response.StatusCode.Should().Be((int) HttpStatusCode.BadRequest);
@@ -54,8 +59,8 @@ namespace CommandRouting.UnitTests.Router.Serialization
             IHandlerResult handlerResult = new Handled();
 
             // When I try to write the response out to the http context
-            ResponseWriter responseWriter = new ResponseWriter(httpContext, OutputFormatter);
-            responseWriter.SerializeResponseAsync(handlerResult).Wait();
+            ResponseWriter responseWriter = new ResponseWriter(OutputFormatters());
+            responseWriter.SerializeResponseAsync(handlerResult, httpContext).Wait();
 
 
             // Then the status code of the HttpReponse should be set correctly

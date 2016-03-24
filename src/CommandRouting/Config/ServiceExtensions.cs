@@ -21,7 +21,7 @@ namespace CommandRouting.Config
             // Register other dependencies that we want to inject
             services.AddSingleton<IRequestModelActivator, RequestModelActivator>();
             services.AddSingleton<IRequestReader, RequestReader>();
-            services.AddSingleton<IInputFormatSelector, InputFormatSelector>();
+            services.AddSingleton<IResponseWriter, ResponseWriter>();
         }
 
         /// <summary>

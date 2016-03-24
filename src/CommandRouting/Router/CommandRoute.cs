@@ -1,8 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using CommandRouting.Handlers;
+using CommandRouting.Helpers;
 using CommandRouting.Router.Serialization;
-using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Routing;
 
 namespace CommandRouting.Router
@@ -11,16 +10,17 @@ namespace CommandRouting.Router
     {
         private readonly IRequestModelActivator _modelActivator;
         private readonly CommandPipeline<TRequest> _pipeline;
+        private readonly IResponseWriter _responseWriter;
 
-        public CommandRoute(IRequestModelActivator modelActivator, CommandPipeline<TRequest> pipeline)
+        public CommandRoute(IRequestModelActivator modelActivator, CommandPipeline<TRequest> pipeline, IResponseWriter responseWriter)
         {
-            if (modelActivator == null)
-                throw new ArgumentNullException(nameof(modelActivator));
-            if (pipeline == null)
-                throw new ArgumentNullException(nameof(pipeline));
+            Ensure.NotNull(modelActivator, nameof(modelActivator));
+            Ensure.NotNull(pipeline, nameof(pipeline));
+            Ensure.NotNull(responseWriter, nameof(responseWriter));
 
             _modelActivator = modelActivator;
             _pipeline = pipeline;
+            _responseWriter = responseWriter;
         }
 
         public async Task RouteAsync(RouteContext context)
@@ -35,9 +35,7 @@ namespace CommandRouting.Router
             if (pipelineResult.IsHandled)
             {
                 // Serialize the response model                 
-                IOutputFormatter outputFormatter = new JsonOutputFormatter();
-                ResponseWriter responseWriter = new ResponseWriter(context.HttpContext, outputFormatter);
-                await responseWriter.SerializeResponseAsync(pipelineResult);
+                await _responseWriter.SerializeResponseAsync(pipelineResult, context.HttpContext);
 
                 // Let OWIN know our middleware handled the request
                 context.IsHandled = true;

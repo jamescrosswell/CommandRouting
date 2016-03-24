@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandRouting.Helpers;
 using Microsoft.AspNet.Http;
@@ -19,14 +20,12 @@ namespace CommandRouting.Router.Serialization
 
     public class RequestReader : IRequestReader
     {
-        private readonly IInputFormatSelector _inputFormatSelector;
+        private readonly IEnumerable<IInputFormatter> _inputFormatters;
 
-        public RequestReader(IInputFormatSelector inputFormatSelector)
+        public RequestReader(IEnumerable<IInputFormatter> inputFormatters)
         {
-
-            if (inputFormatSelector == null)
-                throw new ArgumentNullException(nameof(inputFormatSelector));
-            _inputFormatSelector = inputFormatSelector;
+            Ensure.NotNull(inputFormatters, nameof(inputFormatters));
+            _inputFormatters = inputFormatters;
         }
 
         /// <inheritdoc />
@@ -37,7 +36,7 @@ namespace CommandRouting.Router.Serialization
 
             // Work out what input format to use
             InputFormatterContext formatContext = httpContext.InputFormatterContext<TRequest>();
-            IInputFormatter inputFormatter = _inputFormatSelector.GetFormatterForContext(formatContext);
+            IInputFormatter inputFormatter = _inputFormatters.GetBestFormatter(formatContext);
 
             // Have the formatter dezerialize a model from the http request body
             var inputFormatterResult = await inputFormatter.ReadAsync(formatContext);
