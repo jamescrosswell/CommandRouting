@@ -1,11 +1,6 @@
 ﻿namespace CommandRouting
 {
-    public interface ICommand
-    {
-        
-    }
-
-    public interface ICommand<in TRequest, out TResponse>: ICommand
+    public interface ICommand<in TRequest, out TResponse>
     {
         TResponse Execute(TRequest request);
     }

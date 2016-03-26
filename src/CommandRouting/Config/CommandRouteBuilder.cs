@@ -11,14 +11,13 @@ namespace CommandRouting.Config
     /// <summary>
     /// Provide extensions to register command handlers automatically with the dependency injection container
     /// </summary>
-    public class CommandRouteBuilder : IRouteBuilder
+    public class CommandRouteBuilder : ICommandRouteBuilder, IRouteBuilder
     {
         public IRouter DefaultHandler { get; set; }
         public IServiceProvider ServiceProvider { get; }
         public IList<IRouter> Routes { get; }
 
         private readonly IInlineConstraintResolver _constraintResolver;
-        private readonly CommandRoutingOptions _options;
 
         public CommandRouteBuilder(IServiceProvider serviceProvider)
         {
@@ -29,7 +28,6 @@ namespace CommandRouting.Config
             // Additional dependencies that are required for command routing - this is kind of a service
             // locator antipattern but that's an almost unavoidable side effect of implementing IRouteBuilder
             // and kind of the price we pay for making the setup syntax nice and simple in the Startup class.
-            _options = serviceProvider.GetService<CommandRoutingOptions>() ?? new CommandRoutingOptions();
             _constraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             if (_constraintResolver == null)
                 throw new InvalidOperationException($"Unable to find service: {nameof(IInlineConstraintResolver)}");
@@ -44,7 +42,7 @@ namespace CommandRouting.Config
             return (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(ServiceProvider, handlerType);
         }
 
-        internal void AddRoute<TRequest>(HttpVerb verb, string routeTemplate, Type[] commandHandlerTypes)
+        void ICommandRouteBuilder.AddRoute<TRequest>(HttpVerb verb, string routeTemplate, Type[] commandHandlerTypes)
         {
             // Instanciate concrete instances for each handler in the command pipeline
             CommandPipeline<TRequest> pipeline = new CommandPipeline<TRequest>(verb);

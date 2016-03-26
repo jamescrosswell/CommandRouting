@@ -13,7 +13,6 @@ namespace CommandRouting.Config
             // of the configuration properties via an optional action method
             CommandRoutingOptions options = new CommandRoutingOptions();
             initConfig?.Invoke(options);
-            services.AddInstance<ICommandRoutingOptions>(options);
             services.AddInstance(options.InputFormatters);
             services.AddInstance(options.OutputFormatters);
             services.AddInstance(options.ValueParsers);

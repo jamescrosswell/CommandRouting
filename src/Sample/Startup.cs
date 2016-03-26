@@ -4,6 +4,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Commands.Account;
 using Sample.Commands.SayHello;
 
 namespace Sample
@@ -33,6 +34,8 @@ namespace Sample
                 .Post("hello")
                 .As<SayHelloRequest>()
                 .RoutesTo<PostHello>();
+
+            commandRoutes.Map("account").To<AccountCommands>();
 
             app.UseRouter(commandRoutes.Build());
 
