@@ -1,11 +1,6 @@
 namespace CommandRouting.Handlers
 {
-    public interface ICommandHandler
-    {
-
-    }
-
-    public interface ICommandHandler<in TRequest> : ICommandHandler
+    public interface ICommandHandler<in TRequest> 
     {
         HandlerResult Dispatch(TRequest request);
     }
