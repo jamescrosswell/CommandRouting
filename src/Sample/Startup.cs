@@ -4,13 +4,17 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Sample.Commands.Account;
 using Sample.Commands.SayHello;
+using Sample.CommandSets.Account;
 
 namespace Sample
 {
     public class Startup
     {
+        public Startup(IHostingEnvironment env)
+        {
+        }
+
         // This method gets called by the runtime and can be used to add services to the DI container.
         public void ConfigureServices(IServiceCollection services)
         {

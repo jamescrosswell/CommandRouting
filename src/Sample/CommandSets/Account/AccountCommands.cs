@@ -2,19 +2,19 @@
 using CommandRouting.Config;
 using CommandRouting.Handlers;
 
-namespace Sample.Commands.Account
+namespace Sample.CommandSets.Account
 {
     public class AccountCommands: ICommandSet
     {
         public void Configure(ICommandRouteBuilder routes)
         {
             routes
-                .Get("signin")
+                .Post("signin")
                 .As<EmptyRequest>()
                 .RoutesTo<SignIn>();
 
             routes
-                .Get("signout")
+                .Delete("signout")
                 .As<EmptyRequest>()
                 .RoutesTo<SignOut>();
         }
