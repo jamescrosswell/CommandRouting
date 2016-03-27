@@ -1,17 +1,24 @@
 version: 0.0.{build}
+configuration: Release
 os: Visual Studio 2015
 install:
 - dnvm upgrade -r clr
 - dnu restore
+- npm install jsonfile -g
 before_build:
 - nuget restore
+- cd %APPVEYOR_BUILD_FOLDER%\build
+- npm install
+- node patch-project-json.js ../src/CommandRouting/project.json %APPVEYOR_BUILD_NUMBER% alpha
+- cd %APPVEYOR_BUILD_FOLDER%
 build:
   publish_nuget: true
+  publish_nuget_symbols: true  
   verbosity: minimal
 test_script:
 - dnx -p src\CommandRouting.UnitTests\project.json test
 artifacts:
-- path: '**\*.nupkg' # find all NuGet packages recursively
+- path: 'artifacts\bin\CommandRouting\$(configuration)\*.nupkg'
 notifications:
 - provider: Webhook
   url: https://webhooks.gitter.im/e/e6716e9326783448ae1d
