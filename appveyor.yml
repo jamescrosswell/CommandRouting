@@ -6,9 +6,12 @@ install:
 before_build:
 - nuget restore
 build:
+  publish_nuget: true
   verbosity: minimal
 test_script:
 - dnx -p src\CommandRouting.UnitTests\project.json test
+artifacts:
+- path: '**\*.nupkg' # find all NuGet packages recursively
 notifications:
 - provider: Webhook
   url: https://webhooks.gitter.im/e/e6716e9326783448ae1d
