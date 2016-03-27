@@ -15,7 +15,7 @@ namespace CommandRouting
     /// in a tree of routes that get's composed recursively.
     /// </para>
     /// <para>
-    /// In this way, the registration of command rountes can be delgated from the 
+    /// In this way, the registration of command routes can be delegated from the 
     /// startup module to command sets in a hierarchical manner. 
     /// </para>
     /// <para>
