@@ -34,6 +34,8 @@ namespace Sample
                 .As<SayHelloRequest>()
                 .RoutesTo<PostHello>();
 
+            commandRoutes.AddAttributeRouting();
+
             app.UseRouter(commandRoutes.Build());
 
             app.Run(HelloWorld);
