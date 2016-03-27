@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0-*",
+  "description": "Sample.IntegrationTests Class Library",
+  "authors": [ "james" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnx451": { }
+  },
+  "dependencies": {
+    "FluentAssertions": "4.2.2",
+    "Microsoft.AspNet.TestHost": "1.0.0-rc1-final",
+    "Sample": "1.0.0-*",
+    "xunit": "2.2.0-beta1-build3239",
+    "xunit.runner.dnx": "2.1.0-rc1-build204"
+  },
+  "commands": {
+    "test": "xunit.runner.dnx"
+  }
+}

@@ -1,6 +1,6 @@
 ﻿namespace CommandRouting.Router
 {
-    internal enum HttpVerb
+    public enum HttpVerb
     {
         Delete,
         Get,

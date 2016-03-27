@@ -1,14 +1,15 @@
+using System;
 using CommandRouting.Router;
 
 namespace CommandRouting.Config
 {
     public class RoutePipelineBuilder
     {
-        internal CommandRouteBuilder CommandRouteBuilder;
-        internal HttpVerb Verb;
-        internal string RouteTemplate;
+        internal ICommandRouteBuilder CommandRouteBuilder { get; }
+        internal HttpVerb Verb { get; }
+        internal string RouteTemplate { get; }
 
-        internal RoutePipelineBuilder(CommandRouteBuilder commandRouteBuilder, HttpVerb verb, string routeTemplate)
+        internal RoutePipelineBuilder(ICommandRouteBuilder commandRouteBuilder, HttpVerb verb, string routeTemplate)
         {
             CommandRouteBuilder = commandRouteBuilder;
             Verb = verb;

@@ -1,5 +1,6 @@
 using System;
 using CommandRouting.Handlers;
+using CommandRouting.Router;
 
 namespace CommandRouting.Config
 {
@@ -20,9 +21,8 @@ namespace CommandRouting.Config
         {
             RoutePipelineBuilder.CommandRouteBuilder.AddRoute<TRequest>(
                 RoutePipelineBuilder.Verb,
-                RoutePipelineBuilder.RouteTemplate,
-                commandHandlerTypes
-                );
+                RoutePipelineBuilder.RouteTemplate, 
+                commandHandlerTypes);
         }
 
         /// <summary>

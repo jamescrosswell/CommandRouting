@@ -1,11 +1,12 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using CommandRouting.Router.AttributeRouting;
 
 namespace CommandRouting.Config
 {
     public static class AttributeRoutingCommandRouteBuilderExtensions
     {
-        public static void AddAttributeRouting(this CommandRouteBuilder builder)
+        public static void AddAttributeRouting(this ICommandRouteBuilder builder)
         {
             var attributeLocator = new RouteRequestAttributeLocator();
 
@@ -13,8 +14,10 @@ namespace CommandRouting.Config
             foreach (var routeRequestDeclaration in declarations)
             {
                 var addRoute = builder.GetType()
-                            .GetMethod(nameof(builder.AddRoute), BindingFlags.NonPublic | BindingFlags.Instance)
-                            .MakeGenericMethod(routeRequestDeclaration.RequestType);
+                            .GetMethod(nameof(builder.AddRoute), BindingFlags.Public | BindingFlags.Instance)
+                            ?.MakeGenericMethod(routeRequestDeclaration.RequestType);
+                if (addRoute == null)
+                    throw new ArgumentException($"No matching { nameof(builder.AddRoute)} method found", nameof(builder));
 
                 foreach (var routeRequestAttribute in routeRequestDeclaration.RouteRequestAttributes)
                 {
