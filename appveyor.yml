@@ -1,7 +1,5 @@
 version: 0.0.{build}
 os: Visual Studio 2015
-init:
-- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
 - dnvm upgrade -r clr
 - dnu restore
@@ -11,7 +9,6 @@ build:
   verbosity: minimal
 test_script:
 - dnx -p src\CommandRouting.UnitTests\project.json test
-- dnx -p src\Sample.IntegrationTests\project.json test
 notifications:
 - provider: Webhook
   url: https://webhooks.gitter.im/e/e6716e9326783448ae1d
