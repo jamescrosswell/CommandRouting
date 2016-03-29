@@ -6,9 +6,7 @@ install:
 - dnu restore
 - npm install jsonfile -g
 before_build:
-- echo APPVEYOR_BUILD_ID: %APPVEYOR_BUILD_ID%
-- echo APPVEYOR_BUILD_NUMBER: %APPVEYOR_BUILD_NUMBER%
-- echo APPVEYOR_BUILD_VERSION: %APPVEYOR_BUILD_VERSION%
+- cmd: "echo Building version: %APPVEYOR_BUILD_VERSION%"
 - nuget restore
 - cd %APPVEYOR_BUILD_FOLDER%\build
 - npm install
