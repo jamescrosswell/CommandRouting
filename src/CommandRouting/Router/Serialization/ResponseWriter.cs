@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using CommandRouting.Handlers;
 using CommandRouting.Helpers;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.Net.Http.Headers;
 
 namespace CommandRouting.Router.Serialization
 {
@@ -43,6 +45,15 @@ namespace CommandRouting.Router.Serialization
             // If the response type is is null or Unit, then don't do anything since we have nothing to serialize
             if ((handlerResult.Response ?? Unit.Result) == Unit.Result)
                 return;
+
+            // If the response is a file then return the file as an attachment
+            var fileResult = handlerResult as FileResult;
+            if (fileResult != null)
+            {
+                // And if it's a file then include the file type etc. in the response
+                await fileResult.WriteResponseAsync(httpContext);
+                return;
+            }
 
             // Create a context so that our formatter knows how/where to serialize the response
             var formatterContext = httpContext.OutputFormatterContext(handlerResult);

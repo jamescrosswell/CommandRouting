@@ -1,11 +1,11 @@
 {
-  "version": "0.0.0-*",
+  "version": "1.0.0-*",
   "compilationOptions": {
     "emitEntryPoint": true
   },
 
   "dependencies": {
-    "CommandRouting": "0.0.0-*",
+    "CommandRouting": "1.0.0-*",
     "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
     "Microsoft.AspNet.Mvc.Core": "6.0.0-rc1-final",
     "Microsoft.AspNet.Routing": "1.0.0-rc1-final",

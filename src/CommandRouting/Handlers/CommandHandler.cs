@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace CommandRouting.Handlers
 {
     /// <summary>
@@ -26,6 +28,11 @@ namespace CommandRouting.Handlers
         protected HandlerResult Handled(TResponse response)
         {
             return new Handled<TResponse>(response);
+        }
+
+        protected FileResult File(Stream stream, string contentType, string fileName = null)
+        {
+            return new FileResult(stream, contentType, fileName);
         }
     }
 
