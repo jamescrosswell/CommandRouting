@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
@@ -12,31 +13,31 @@ namespace Sample.IntegrationTests.CommandSets
     public class AccountCommandsTests: SampleTests
     {
         [Fact]
-        public void Get_hello_should_ignore_bob()
+        public async Task Get_hello_should_ignore_bob()
         {
             // Given a sample client
             var client = SampleClient();
 
             // When I call POST /account/signin
             var value = new StringContent("");
-            var response = client.PostAsync("/account/signin", value).Result;
+            var response = await client.PostAsync("/account/signin", value);
 
             // Then the result should be Hello
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             result.Should().Be("\"Hello\"");
         }
 
         [Fact]
-        public void Get_hello_should_say_hello_to_Sue()
+        public async Task Get_hello_should_say_hello_to_Sue()
         {
             // Given a sample client
             var client = SampleClient();
 
             // When I vall Delete /account/signout
-            var response = client.DeleteAsync("/account/signout").Result;
+            var response = await client.DeleteAsync("/account/signout");
 
             // Then the result should be Goodbye
-            string result = response.Content.ReadAsStringAsync().Result;
+            string result = await response.Content.ReadAsStringAsync();
             result.Should().Be("\"Goodbye\"");
         }
     }

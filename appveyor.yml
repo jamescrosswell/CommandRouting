@@ -21,6 +21,7 @@ build:
   verbosity: minimal
 test_script:
 - dnx -p src\CommandRouting.UnitTests\project.json test
+- dnx -p src\Sample.IntegrationTests\project.json test
 artifacts:
 - path: 'artifacts\bin\CommandRouting\$(configuration)\*.nupkg'
 deploy:
