@@ -1,4 +1,4 @@
-version: 0.0.{build}-alpha
+version: 1.0.{build}-alpha
 configuration: Release
 os: Visual Studio 2015
 install:
@@ -6,14 +6,13 @@ install:
 - dnu restore
 - npm install jsonfile -g
 before_build:
-- cmd: "echo Building version: %APPVEYOR_BUILD_VERSION%"
 - nuget restore
 - cd %APPVEYOR_BUILD_FOLDER%\build
 - npm install
-- node patch-project-json.js ../src/CommandRouting/project.json %APPVEYOR_BUILD_NUMBER% alpha
-- node patch-project-json.js ../src/CommandRouting.UnitTests/project.json %APPVEYOR_BUILD_NUMBER% alpha
-- node patch-project-json.js ../src/Sample/project.json %APPVEYOR_BUILD_NUMBER% alpha
-- node patch-project-json.js ../src/Sample.IntegrationTests/project.json %APPVEYOR_BUILD_NUMBER% alpha
+- node patch-project-json.js ../src/CommandRouting/project.json %APPVEYOR_BUILD_VERSION%
+- node patch-project-json.js ../src/CommandRouting.UnitTests/project.json %APPVEYOR_BUILD_VERSION%
+- node patch-project-json.js ../src/Sample/project.json %APPVEYOR_BUILD_VERSION%
+- node patch-project-json.js ../src/Sample.IntegrationTests/project.json %APPVEYOR_BUILD_VERSION%
 - cd %APPVEYOR_BUILD_FOLDER%
 build:
   publish_nuget: true
