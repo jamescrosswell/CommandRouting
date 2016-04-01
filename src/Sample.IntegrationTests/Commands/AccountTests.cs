@@ -1,14 +1,9 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Sample.IntegrationTests.CommandSets
+namespace Sample.IntegrationTests.Commands
 {
     public class AccountCommandsTests: SampleTests
     {

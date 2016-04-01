@@ -4,9 +4,10 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Sample.Commands.Account;
+using Sample.Commands.Jump;
 using Sample.Commands.Logo;
 using Sample.Commands.SayHello;
-using Sample.CommandSets.Account;
 
 namespace Sample
 {
@@ -19,8 +20,12 @@ namespace Sample
         // This method gets called by the runtime and can be used to add services to the DI container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Enable command routing
             services.AddRouting();
             services.AddCommandRouting();
+
+            // Configure context for route pipelines that depend on this
+            services.AddScoped<JumpContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +51,7 @@ namespace Sample
                 .RoutesTo<DownloadLogo>();
 
             commandRoutes.Map("account").To<AccountCommands>();
+            commandRoutes.Map("jump").To<JumpCommands>();
 
             commandRoutes.AddAttributeRouting();
 

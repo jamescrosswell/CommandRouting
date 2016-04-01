@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using CommandRouting.Handlers;
-using Sample.CommandSets.Account;
+using Sample.Commands.Account;
 
 namespace Sample.Commands.Logo
 {
