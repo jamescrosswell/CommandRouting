@@ -38,7 +38,7 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01>()
-            where THandler01 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01)
@@ -46,8 +46,8 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02)
@@ -55,9 +55,9 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03)
@@ -65,10 +65,10 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04)
@@ -76,11 +76,11 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
-            where THandler05 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
+            where THandler05 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05)
@@ -88,12 +88,12 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
-            where THandler05 : ICommandHandler<TRequest>
-            where THandler06 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
+            where THandler05 : IRequestHandler<TRequest>
+            where THandler06 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05),
@@ -102,13 +102,13 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
-            where THandler05 : ICommandHandler<TRequest>
-            where THandler06 : ICommandHandler<TRequest>
-            where THandler07 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
+            where THandler05 : IRequestHandler<TRequest>
+            where THandler06 : IRequestHandler<TRequest>
+            where THandler07 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05),
@@ -117,14 +117,14 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08>()
-            where THandler01 : ICommandHandler<TRequest>
-            where THandler02 : ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
-            where THandler05 : ICommandHandler<TRequest>
-            where THandler06 : ICommandHandler<TRequest>
-            where THandler07 : ICommandHandler<TRequest>
-            where THandler08 : ICommandHandler<TRequest>
+            where THandler01 : IRequestHandler<TRequest>
+            where THandler02 : IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
+            where THandler05 : IRequestHandler<TRequest>
+            where THandler06 : IRequestHandler<TRequest>
+            where THandler07 : IRequestHandler<TRequest>
+            where THandler08 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05),
@@ -133,15 +133,15 @@ namespace CommandRouting.Config
         }
 
         public void RoutesTo<THandler01, THandler02, THandler03, THandler04, THandler05, THandler06, THandler07, THandler08, THandler09>()
-            where THandler01: ICommandHandler<TRequest>
-            where THandler02: ICommandHandler<TRequest>
-            where THandler03 : ICommandHandler<TRequest>
-            where THandler04 : ICommandHandler<TRequest>
-            where THandler05 : ICommandHandler<TRequest>
-            where THandler06 : ICommandHandler<TRequest>
-            where THandler07 : ICommandHandler<TRequest>
-            where THandler08 : ICommandHandler<TRequest>
-            where THandler09 : ICommandHandler<TRequest>
+            where THandler01: IRequestHandler<TRequest>
+            where THandler02: IRequestHandler<TRequest>
+            where THandler03 : IRequestHandler<TRequest>
+            where THandler04 : IRequestHandler<TRequest>
+            where THandler05 : IRequestHandler<TRequest>
+            where THandler06 : IRequestHandler<TRequest>
+            where THandler07 : IRequestHandler<TRequest>
+            where THandler08 : IRequestHandler<TRequest>
+            where THandler09 : IRequestHandler<TRequest>
         {
             RegisterRoute(
                 typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05), 

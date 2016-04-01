@@ -9,19 +9,14 @@ namespace Sample.Commands.Account
         {
             routes
                 .Post("signin")
-                .As<EmptyRequest>()
+                .As<Unit>()
                 .RoutesTo<SignIn>();
 
             routes
                 .Delete("signout")
-                .As<EmptyRequest>()
+                .As<Unit>()
                 .RoutesTo<SignOut>();
         }
-    }
-
-    public class EmptyRequest
-    {
-        
     }
 
 }

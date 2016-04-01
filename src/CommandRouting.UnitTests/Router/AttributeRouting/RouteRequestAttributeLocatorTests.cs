@@ -23,7 +23,7 @@ namespace CommandRouting.UnitTests.Router.AttributeRouting
         [GetRouteRequest("api/done-twice", typeof(ApiHandler))]
         private class DuplicateRoutesAppliedRequest { }
 
-        private class ApiHandler : ICommandHandler<SingleHandlerRequest>
+        private class ApiHandler : IRequestHandler<SingleHandlerRequest>
         {
             public HandlerResult Dispatch(SingleHandlerRequest request) { return new NotHandled(); }
         }

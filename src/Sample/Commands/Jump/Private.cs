@@ -2,7 +2,7 @@
 
 namespace Sample.Commands.Jump
 {
-    public class Private: CommandHandler<JumpRequest, string>
+    public class Private: QueryHandler<JumpRequest, string>
     {
         private readonly JumpContext _context;
 

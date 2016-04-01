@@ -2,7 +2,7 @@
 
 namespace Sample.Commands.SayHello
 {
-    public class SayHello : CommandHandler<SayHelloRequest, string>
+    public class SayHello : QueryHandler<SayHelloRequest, string>
     {
         public override HandlerResult Dispatch(SayHelloRequest request)
         {

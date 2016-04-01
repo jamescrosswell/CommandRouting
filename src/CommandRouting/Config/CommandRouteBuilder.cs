@@ -33,13 +33,13 @@ namespace CommandRouting.Config
                 throw new InvalidOperationException($"Unable to find service: {nameof(IInlineConstraintResolver)}");
         }
 
-        private ICommandHandler<TRequest> ActivateCommandHandler<TRequest>(Type handlerType)
+        private IRequestHandler<TRequest> ActivateCommandHandler<TRequest>(Type handlerType)
         {
             // The ActivatorUtilities let us use the service provider to create instances of a class 
             // that hasn't been registered with the service provider... the reason for doing this is 
             // because the service provider can automatically resolve any of the dependencies that the 
             // command handler specifies.
-            return (ICommandHandler<TRequest>)ActivatorUtilities.CreateInstance(ServiceProvider, handlerType);
+            return (IRequestHandler<TRequest>)ActivatorUtilities.CreateInstance(ServiceProvider, handlerType);
         }
 
         public void AddRoute<TRequest>(HttpVerb verb, string routeTemplate, Type[] commandHandlerTypes)

@@ -8,16 +8,16 @@ namespace CommandRouting.Router
 {
     public class CommandPipeline<TRequest>
     {
-        private readonly IList<ICommandHandler<TRequest>> _commandHandlers;
+        private readonly IList<IRequestHandler<TRequest>> _commandHandlers;
         private readonly HttpVerb _verb;
 
-        internal CommandPipeline(HttpVerb verb, params ICommandHandler<TRequest>[] commandHandlers)
+        internal CommandPipeline(HttpVerb verb, params IRequestHandler<TRequest>[] requestHandlers)
         {
-            _commandHandlers = commandHandlers.ToList();
+            _commandHandlers = requestHandlers.ToList();
             _verb = verb;
         }
 
-        internal void AddHandler(ICommandHandler<TRequest> handler)
+        internal void AddHandler(IRequestHandler<TRequest> handler)
         {
             _commandHandlers.Add(handler);
         }

@@ -1,10 +1,11 @@
-﻿using CommandRouting.Handlers;
+﻿using CommandRouting;
+using CommandRouting.Handlers;
 
 namespace Sample.Commands.Account
 {
-    public class SignOut : CommandHandler<EmptyRequest, string>
+    public class SignOut : QueryHandler<string>
     {
-        public override HandlerResult Dispatch(EmptyRequest request)
+        public override HandlerResult Dispatch(Unit request)
         {
             return Handled("Goodbye");
         }

@@ -24,12 +24,16 @@ namespace CommandRouting.Router
         }
 
         public async Task RouteAsync(RouteContext context)
-        {                        
-            // Build a request model from the request 
-            TRequest requestModel = await _modelActivator.CreateRequestModelAsync<TRequest>(context);
+        {
+            // Build a request model from the request... note that we have to make special Unit type since it's a singleton
+            object requestModel;
+            if (typeof(TRequest) == typeof(Unit))
+               requestModel = Unit.Result;
+            else
+                requestModel = await _modelActivator.CreateRequestModelAsync<TRequest>(context);
 
             // Run the request through our command pipeline
-            IHandlerResult pipelineResult = _pipeline.Dispatch(context.HttpContext, requestModel);
+            IHandlerResult pipelineResult = _pipeline.Dispatch(context.HttpContext, (TRequest)requestModel);
 
             // If the request was handled by our pipeline then write the response out
             if (pipelineResult.IsHandled)

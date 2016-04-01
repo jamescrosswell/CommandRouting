@@ -14,7 +14,7 @@ namespace CommandRouting.UnitTests.Router
         {
         }
 
-        public class TestFooHandler : CommandHandler<FooRequest, int>
+        public class TestFooHandler : QueryHandler<FooRequest, int>
         {
             public override HandlerResult Dispatch(FooRequest request)
             {

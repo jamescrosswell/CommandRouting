@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CommandRouting;
 using CommandRouting.Config;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
@@ -47,7 +48,7 @@ namespace Sample
 
             commandRoutes
                 .Get("logo")
-                .As<EmptyRequest>()
+                .As<Unit>()
                 .RoutesTo<DownloadLogo>();
 
             commandRoutes.Map("account").To<AccountCommands>();
