@@ -16,7 +16,7 @@ before_build:
 - cd %APPVEYOR_BUILD_FOLDER%
 build:
   publish_nuget: true
-  publish_nuget_symbols: true  
+  publish_nuget_symbols: false  
   verbosity: minimal
 test_script:
 - dnx -p src\CommandRouting.UnitTests\project.json test
