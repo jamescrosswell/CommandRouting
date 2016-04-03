@@ -13,7 +13,7 @@ namespace Sample.Commands.Jump
 
         public override HandlerResult Dispatch(JumpRequest request)
         {
-            // The seargent just clarifies orders for other command handlers in the pipeline... 
+            // The seargent just clarifies orders for other request handlers in the pipeline... 
             _context.Height = 2.4m;
 
             // he never handles the command

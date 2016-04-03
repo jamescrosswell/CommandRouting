@@ -4,12 +4,12 @@ using CommandRouting.Router;
 
 namespace CommandRouting.Config
 {
-    public class CommandSetPrefixBuilder
+    public class RouteSetPrefixBuilder
     {
         internal ICommandRouteBuilder CommandRouteBuilder { get; }
         internal string Prefix { get; }
 
-        internal CommandSetPrefixBuilder(ICommandRouteBuilder commandRouteBuilder, string prefix)
+        internal RouteSetPrefixBuilder(ICommandRouteBuilder commandRouteBuilder, string prefix)
         {
             CommandRouteBuilder = commandRouteBuilder;
             Prefix = prefix;

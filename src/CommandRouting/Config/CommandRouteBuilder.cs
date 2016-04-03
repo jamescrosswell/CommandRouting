@@ -9,7 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CommandRouting.Config
 {
     /// <summary>
-    /// Provide extensions to register command handlers automatically with the dependency injection container
+    /// Provide extensions to register request handlers automatically with the
+    /// dependency injection container
     /// </summary>
     public class CommandRouteBuilder : ICommandRouteBuilder, IRouteBuilder
     {
@@ -35,9 +36,9 @@ namespace CommandRouting.Config
 
         private IRequestHandler<TRequest> ActivateCommandHandler<TRequest>(Type handlerType)
         {
-            // The ActivatorUtilities let us use the service provider to create instances of a class 
-            // that hasn't been registered with the service provider... the reason for doing this is 
-            // because the service provider can automatically resolve any of the dependencies that the 
+            // The ActivatorUtilities let us use the service provider to create instances of a class
+            // that hasn't been registered with the service provider... the reason for doing this is
+            // because the service provider can automatically resolve any of the dependencies that the
             // command handler specifies.
             return (IRequestHandler<TRequest>)ActivatorUtilities.CreateInstance(ServiceProvider, handlerType);
         }

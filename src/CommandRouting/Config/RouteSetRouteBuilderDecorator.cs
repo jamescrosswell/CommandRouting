@@ -8,13 +8,13 @@ namespace CommandRouting.Config
     /// <summary>
     /// This decorator ensures all routes registered with this route builder have a prefix (if one is defined).
     /// </summary>
-    internal class CommandSetRouteBuilderDecorator: ICommandRouteBuilder
+    internal class RouteSetRouteBuilderDecorator: ICommandRouteBuilder
     {
         private readonly ICommandRouteBuilder _parentRouteBuilder;
 
         internal readonly string NakedPrefix;
 
-        public CommandSetRouteBuilderDecorator(ICommandRouteBuilder parentRouteBuilder, string prefix = "")
+        public RouteSetRouteBuilderDecorator(ICommandRouteBuilder parentRouteBuilder, string prefix = "")
         {
             // Store the parent
             _parentRouteBuilder = parentRouteBuilder;
@@ -23,11 +23,11 @@ namespace CommandRouting.Config
             NakedPrefix = (prefix ?? "").Strip("/");
         }
 
-        internal ICommandSet ActivateCommandSet<TCommandSet>()
+        internal IRouteSet ActivateCommandSet<TCommandSet>()
         {
-            // Have our service provider create an instance of the command set... in case it has any
+            // Have our service provider create an instance of the route set... in case it has any
             // dependencies that also require activation
-            return (ICommandSet)ActivatorUtilities.CreateInstance(ServiceProvider, typeof(TCommandSet));
+            return (IRouteSet)ActivatorUtilities.CreateInstance(ServiceProvider, typeof(TCommandSet));
         }
 
         // Delegate to the parent - we're just a decorator

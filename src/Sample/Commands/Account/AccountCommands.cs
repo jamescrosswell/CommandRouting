@@ -3,7 +3,7 @@ using CommandRouting.Config;
 
 namespace Sample.Commands.Account
 {
-    public class AccountCommands: ICommandSet
+    public class AccountCommands: IRouteSet
     {
         public void Configure(ICommandRouteBuilder routes)
         {

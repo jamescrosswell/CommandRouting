@@ -1,7 +1,7 @@
 namespace CommandRouting.Config
 {
     /// <summary>
-    /// Extensions that give us our fluent syntax for mapping to command sets:
+    /// Extensions that give us our fluent syntax for mapping to route sets:
     /// <example> 
     /// <code>
     ///     CommandPipelineBuilder routeBuilder = new CommandPipelineBuilder(IServiceProvider ServiceProvider);
@@ -14,28 +14,28 @@ namespace CommandRouting.Config
     public static class FluentCommandSets
     {
 
-        public static CommandSetPrefixBuilder Map(this ICommandRouteBuilder builder, string prefix = "")
+        public static RouteSetPrefixBuilder Map(this ICommandRouteBuilder builder, string prefix = "")
         {
-            return new CommandSetPrefixBuilder(builder, prefix);
+            return new RouteSetPrefixBuilder(builder, prefix);
         }
 
-        public static void To<TCommandSet>(this CommandSetPrefixBuilder builder)
-            where TCommandSet : ICommandSet
+        public static void To<TCommandSet>(this RouteSetPrefixBuilder builder)
+            where TCommandSet : IRouteSet
         {
             MapCommands<TCommandSet>(builder.CommandRouteBuilder, builder.Prefix);
         }
 
         public static void MapCommands<TCommandSet>(this ICommandRouteBuilder builder, string prefix = "")
-            where TCommandSet : ICommandSet
+            where TCommandSet : IRouteSet
         {
-            // Create a CommandSetRouteBuilderDecorator to register all the routes defined in the command set.
+            // Create a CommandSetRouteBuilderDecorator to register all the routes defined in the route set.
             // This makes sure the routes get prefixed if necessary
-            var commandSetRouteBuilder = new CommandSetRouteBuilderDecorator(builder, prefix);
+            var commandSetRouteBuilder = new RouteSetRouteBuilderDecorator(builder, prefix);
 
             // Activate the CommandSet
-            ICommandSet commandSet = commandSetRouteBuilder.ActivateCommandSet<TCommandSet>();
+            IRouteSet commandSet = commandSetRouteBuilder.ActivateCommandSet<TCommandSet>();
 
-            // Have the command set register it's routes using our decorated route builder
+            // Have the route set register it's routes using our decorated route builder
             commandSet.Configure(commandSetRouteBuilder);
         }
     }

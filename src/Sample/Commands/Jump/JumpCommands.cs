@@ -3,7 +3,7 @@ using CommandRouting.Config;
 
 namespace Sample.Commands.Jump
 {
-    public class JumpCommands: ICommandSet
+    public class JumpCommands: IRouteSet
     {
         public void Configure(ICommandRouteBuilder builder)
         {

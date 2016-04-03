@@ -21,13 +21,13 @@ namespace CommandRouting.Config
         {
             RoutePipelineBuilder.CommandRouteBuilder.AddRoute<TRequest>(
                 RoutePipelineBuilder.Verb,
-                RoutePipelineBuilder.RouteTemplate, 
+                RoutePipelineBuilder.RouteTemplate,
                 commandHandlerTypes);
         }
 
         /// <summary>
         /// You probably shouldn't use this as it isn't strongly typed (if you try to build
-        /// a command pipeline of types that are not command handlers it will fail at runtime).
+        /// a command pipeline of types that are not request handlers it will fail at runtime).
         /// The only reason I provided it is because I couldn't handle all possible scenarios
         /// with the generic To overrides (e.g. if you want more than 9 handlers in a pipeline).
         /// </summary>
@@ -144,7 +144,7 @@ namespace CommandRouting.Config
             where THandler09 : IRequestHandler<TRequest>
         {
             RegisterRoute(
-                typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05), 
+                typeof(THandler01), typeof(THandler02), typeof(THandler03), typeof(THandler04), typeof(THandler05),
                 typeof(THandler06), typeof(THandler07), typeof(THandler08), typeof(THandler09)
                 );
         }
