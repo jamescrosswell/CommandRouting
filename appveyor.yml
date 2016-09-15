@@ -17,11 +17,14 @@ build:
   publish_nuget: true
   publish_nuget_symbols: false  
   verbosity: minimal
+after_build:
+- cd %APPVEYOR_BUILD_FOLDER%\src\CommandRouting
+- dotnet pack --configuration $(configuration) --output ..\..\artifacts\
 test_script:
 - dotnet test src\CommandRouting.UnitTests\project.json -c Release
 - dotnet test src\Sample.IntegrationTests\project.json -c Release
 artifacts:
-- path: 'artifacts\bin\CommandRouting\$(configuration)\*.nupkg'
+- path: 'artifacts\*.nupkg'
 deploy:
 - provider: NuGet
   api_key:
