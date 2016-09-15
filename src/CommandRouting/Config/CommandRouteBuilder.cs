@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using CommandRouting.Handlers;
 using CommandRouting.Router;
-using Microsoft.AspNet.Routing;
-using Microsoft.AspNet.Routing.Template;
+using CommandRouting.Router.Serialization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandRouting.Config
@@ -16,20 +17,23 @@ namespace CommandRouting.Config
     {
         public IRouter DefaultHandler { get; set; }
         public IServiceProvider ServiceProvider { get; }
+
         public IList<IRouter> Routes { get; }
 
         private readonly IInlineConstraintResolver _constraintResolver;
 
-        public CommandRouteBuilder(IServiceProvider serviceProvider)
+        public CommandRouteBuilder(IApplicationBuilder applicationBuilder)
         {
-            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-            ServiceProvider = serviceProvider;
+            if (applicationBuilder == null) throw new ArgumentNullException(nameof(applicationBuilder));
+            ApplicationBuilder = applicationBuilder;
+            ServiceProvider = applicationBuilder.ApplicationServices;
+
             Routes = new List<IRouter>();
 
             // Additional dependencies that are required for command routing - this is kind of a service
             // locator antipattern but that's an almost unavoidable side effect of implementing IRouteBuilder
             // and kind of the price we pay for making the setup syntax nice and simple in the Startup class.
-            _constraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
+            _constraintResolver = ServiceProvider.GetService<IInlineConstraintResolver>();
             if (_constraintResolver == null)
                 throw new InvalidOperationException($"Unable to find service: {nameof(IInlineConstraintResolver)}");
         }
@@ -46,7 +50,7 @@ namespace CommandRouting.Config
         public void AddRoute<TRequest>(HttpVerb verb, string routeTemplate, Type[] commandHandlerTypes)
         {
             // Instanciate concrete instances for each handler in the command pipeline
-            CommandPipeline<TRequest> pipeline = new CommandPipeline<TRequest>(verb);
+            var pipeline = new CommandPipeline<TRequest>(verb);
             foreach (Type handlerType in commandHandlerTypes)
             {
                 var handler = ActivateCommandHandler<TRequest>(handlerType);
@@ -54,8 +58,8 @@ namespace CommandRouting.Config
             }
 
             // Register a route for the command pipeline
-            var commandRoute = ActivatorUtilities.CreateInstance<CommandRoute<TRequest>>(ServiceProvider, pipeline);
-            Routes.Add(new TemplateRoute(
+            var commandRoute = ActivatorUtilities.CreateInstance<CommandRoute<TRequest>>(ServiceProvider, pipeline);         
+            Routes.Add(new Route(
                 commandRoute,
                 routeTemplate,
                 _constraintResolver
@@ -69,5 +73,7 @@ namespace CommandRouting.Config
                 routeCollection.Add(router);
             return routeCollection;
         }
+
+        public IApplicationBuilder ApplicationBuilder { get; }
     }
 }

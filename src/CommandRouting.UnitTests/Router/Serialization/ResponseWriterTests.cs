@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System.Buffers;
+using System.Collections.Generic;
 using System.Net;
 using CommandRouting.Handlers;
 using CommandRouting.Router.Serialization;
 using FluentAssertions;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Internal;
-using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using NSubstitute;
 using Xunit;
+using CommandRouting.Helpers;
 
 namespace CommandRouting.UnitTests.Router.Serialization
 {
@@ -19,14 +23,22 @@ namespace CommandRouting.UnitTests.Router.Serialization
             public int Ranking { get; set; }
         }
 
-        private static IEnumerable<IOutputFormatter> OutputFormatters()
+        private static IOptions<MvcOptions> Options()
         {
-            yield return new JsonOutputFormatter(
+            var jsonFormatter = new JsonOutputFormatter(
                 new JsonSerializerSettings
                 {
                     Formatting = Formatting.None,
-                }
+                },
+                ArrayPool<char>.Shared
             );
+
+            var options = Substitute.For<IOptions<MvcOptions>>();
+            options.Value.Returns(new MvcOptions
+            {
+                OutputFormatters = { jsonFormatter }
+            });
+            return options;
         }
 
 
@@ -41,7 +53,7 @@ namespace CommandRouting.UnitTests.Router.Serialization
             IHandlerResult handlerResult = new Handlers.HttpResponse(HttpStatusCode.BadRequest);
 
             // When I try to write the response out to the http context
-            ResponseWriter responseWriter = new ResponseWriter(OutputFormatters());
+            ResponseWriter responseWriter = new ResponseWriter(Options());
             responseWriter.SerializeResponseAsync(handlerResult, httpContext).Wait();
 
             // Then the status code of the HttpReponse should be set correctly
@@ -59,7 +71,7 @@ namespace CommandRouting.UnitTests.Router.Serialization
             IHandlerResult handlerResult = new Handled();
 
             // When I try to write the response out to the http context
-            ResponseWriter responseWriter = new ResponseWriter(OutputFormatters());
+            ResponseWriter responseWriter = new ResponseWriter(Options());
             responseWriter.SerializeResponseAsync(handlerResult, httpContext).Wait();
 
 

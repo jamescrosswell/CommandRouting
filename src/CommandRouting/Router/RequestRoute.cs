@@ -1,5 +1,4 @@
 ﻿using System;
-using CommandRouting.Helpers;
 
 namespace CommandRouting.Router
 {
@@ -12,8 +11,8 @@ namespace CommandRouting.Router
 
         protected RouteRequestAttribute(string routeTemplate, Type[] commandHandlers)
         {
-            Ensure.NotNull(routeTemplate, nameof(routeTemplate));
-            Ensure.NotNull(commandHandlers, nameof(commandHandlers));
+            if (routeTemplate == null) throw new ArgumentNullException(nameof(routeTemplate));
+            if (commandHandlers == null) throw new ArgumentNullException(nameof(commandHandlers));
             RouteTemplate = routeTemplate;
             CommandHandlers = commandHandlers;
         }

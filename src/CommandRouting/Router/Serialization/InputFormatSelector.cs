@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using CommandRouting.Helpers;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
-using Microsoft.AspNet.Mvc.ModelBinding;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace CommandRouting.Router.Serialization
 {
@@ -11,7 +14,7 @@ namespace CommandRouting.Router.Serialization
     {
         internal static IInputFormatter GetBestFormatter(this IEnumerable<IInputFormatter> inputFormatters, InputFormatterContext context)
         {
-            Ensure.NotNull(inputFormatters, nameof(inputFormatters));
+            if (inputFormatters == null) throw new ArgumentNullException(nameof(inputFormatters));
 
             // Convert to an array, to avoid multiple enumeration
             var formatters = inputFormatters as IInputFormatter[] ?? inputFormatters.ToArray();
@@ -30,11 +33,13 @@ namespace CommandRouting.Router.Serialization
         /// <returns></returns>
         internal static InputFormatterContext InputFormatterContext<TRequest>(this HttpContext context)
         {
+            Func<Stream, Encoding, TextReader> readerFactory = (stream, encoding) => new HttpRequestStreamReader(stream, encoding);
             return new InputFormatterContext(
                 context,
                 string.Empty,
                 new ModelStateDictionary(),
-                typeof(TRequest).MetaData()
+                typeof(TRequest).MetaData(),
+                readerFactory
                 );
         }
     }

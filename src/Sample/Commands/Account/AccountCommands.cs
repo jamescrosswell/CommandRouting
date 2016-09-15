@@ -1,5 +1,6 @@
 ﻿using CommandRouting;
 using CommandRouting.Config;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Sample.Commands.Account
 {
@@ -16,6 +17,11 @@ namespace Sample.Commands.Account
                 .Delete("signout")
                 .As<Unit>()
                 .RoutesTo<SignOut>();
+
+            routes
+                .Get("profile")
+                .As<Unit>()
+                .RoutesTo<ShowProfile>();
         }
     }
 

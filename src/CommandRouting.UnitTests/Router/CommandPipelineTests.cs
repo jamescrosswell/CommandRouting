@@ -2,8 +2,7 @@
 using CommandRouting.Handlers;
 using CommandRouting.Router;
 using FluentAssertions;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace CommandRouting.UnitTests.Router
@@ -23,23 +22,20 @@ namespace CommandRouting.UnitTests.Router
         }
 
         [Theory]
-        [InlineData("GET", typeof(NotHandled))]
-        [InlineData("POST", typeof(Handled<int>))]
-        public void Dispatch_should_only_handle_appropriate_request_methods(string requestMethod, Type expectedResultType)
+        [InlineData("GET", false)]
+        [InlineData("POST", true)]
+        public void CanHandleVerb_should_match_appropriate_request_methods(string requestMethod, bool expectedResult)
         {
-            // Given a POST FooRequest CommandPipeline
-            CommandPipeline<FooRequest> pipeline = new CommandPipeline<FooRequest>(HttpVerb.Post, new TestFooHandler());
-
-            // And an HttpContext for a GET operation
+            // Given an HttpContext
             HttpContext httpContext = new DefaultHttpContext();
             httpContext.Request.Method = requestMethod;
 
-            // When I try to dispatch a FooRequest
-            FooRequest request = new FooRequest();
-            IHandlerResult handlerResult = pipeline.Dispatch(httpContext, request);
+            // When I check if the pipeline can handle the request
+            CommandPipeline<FooRequest> pipeline = new CommandPipeline<FooRequest>(HttpVerb.Post, new TestFooHandler());
+            var result = pipeline.CanHandleVerb(httpContext);
 
-            // Then the pipeline should not handle the request
-            handlerResult.Should().BeOfType(expectedResultType);
+            // Then the pipeline should only handle appropriate verbs
+            result.Should().Be(expectedResult);
         }
 
     }

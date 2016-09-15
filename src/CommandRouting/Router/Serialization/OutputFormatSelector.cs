@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Buffers;
+using System.Collections.Generic;
 using System.Linq;
 using CommandRouting.Handlers;
 using CommandRouting.Helpers;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
-using Microsoft.AspNet.Mvc.Infrastructure;
-using Microsoft.Extensions.MemoryPool;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace CommandRouting.Router.Serialization
 {
@@ -14,7 +15,7 @@ namespace CommandRouting.Router.Serialization
         internal static IOutputFormatter GetBestFormatter(
             this IEnumerable<IOutputFormatter> outputFormatters, OutputFormatterWriteContext context)
         {
-            Ensure.NotNull(outputFormatters, nameof(outputFormatters));
+            if (outputFormatters == null) throw new ArgumentNullException(nameof(outputFormatters));
 
             // Convert to an array, to avoid multiple enumeration
             var formatters = outputFormatters as IOutputFormatter[] ?? outputFormatters.ToArray();
@@ -26,9 +27,9 @@ namespace CommandRouting.Router.Serialization
 
         internal static OutputFormatterWriteContext OutputFormatterContext(this HttpContext context, IHandlerResult handlerResult)
         {
-            IArraySegmentPool<byte> byteSegmentPool = new DefaultArraySegmentPool<byte>();
-            IArraySegmentPool<char> charSegmentPool = new DefaultArraySegmentPool<char>();
-            IHttpResponseStreamWriterFactory writerFactory = new MemoryPoolHttpResponseStreamWriterFactory(byteSegmentPool, charSegmentPool);
+            var bytePool = ArrayPool<byte>.Shared;
+            var charPool = ArrayPool<char>.Shared;
+            IHttpResponseStreamWriterFactory writerFactory = new MemoryPoolHttpResponseStreamWriterFactory(bytePool, charPool);
 
             return new OutputFormatterWriteContext(
                 context,

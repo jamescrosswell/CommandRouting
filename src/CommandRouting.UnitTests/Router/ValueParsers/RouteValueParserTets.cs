@@ -1,6 +1,6 @@
 ﻿using CommandRouting.Router.ValueParsers;
 using FluentAssertions;
-using Microsoft.AspNet.Routing;
+using Microsoft.AspNetCore.Routing;
 using Xunit;
 
 namespace CommandRouting.UnitTests.Router.ValueParsers

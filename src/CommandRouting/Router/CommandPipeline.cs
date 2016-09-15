@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CommandRouting.Handlers;
-using Microsoft.AspNet.Http;
+using CommandRouting.Router.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace CommandRouting.Router
 {
@@ -11,7 +12,10 @@ namespace CommandRouting.Router
         private readonly IList<IRequestHandler<TRequest>> _commandHandlers;
         private readonly HttpVerb _verb;
 
-        internal CommandPipeline(HttpVerb verb, params IRequestHandler<TRequest>[] requestHandlers)
+        internal CommandPipeline(
+            HttpVerb verb, 
+            params IRequestHandler<TRequest>[] requestHandlers
+            )
         {
             _commandHandlers = requestHandlers.ToList();
             _verb = verb;
@@ -22,22 +26,34 @@ namespace CommandRouting.Router
             _commandHandlers.Add(handler);
         }
 
-        internal IHandlerResult Dispatch(HttpContext context, TRequest requestModel)
+        public bool CanHandleVerb(HttpContext httpContext)
         {
-            // Check to see if this pipeline handles the request verb
-            bool pipelineHandlesVerb = string.Equals(
-                context.Request.Method, $"{_verb}",
+            return string.Equals(
+                httpContext.Request.Method, $"{_verb}",
                 StringComparison.OrdinalIgnoreCase
                 );
-            
+        }
+
+        public RequestDelegate GetRequestHandler(TRequest requestModel, IResponseWriter responseWriter)
+        {
+            // Otherwise create a simple anonymous delegate to dispatch the request 
+            // through our command pipeline and serialize the result to the http response
+            return context =>
+            {
+                var result = Dispatch(requestModel);
+                return responseWriter.SerializeResponseAsync(result, context);
+            };            
+        }
+
+        public IHandlerResult Dispatch(TRequest requestModel)
+        {            
             // Run the command through our command pipeline until it gets handled
-            if (pipelineHandlesVerb)
-                foreach (var handler in _commandHandlers)
-                {
-                    IHandlerResult handlerResult = handler.Dispatch(requestModel);
-                    if (handlerResult.IsHandled)
-                        return handlerResult;
-                }
+            foreach (var handler in _commandHandlers)
+            {
+                IHandlerResult handlerResult = handler.Dispatch(requestModel);
+                if (handlerResult.IsHandled)
+                    return handlerResult;
+            }
 
             // Otherwise our pipeline can't handle the request
             return new NotHandled();

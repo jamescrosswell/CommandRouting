@@ -10,30 +10,24 @@ namespace Sample.IntegrationTests.Commands
         [Fact]
         public async Task Get_hello_should_ignore_bob()
         {
-            // Given a sample client
-            var client = SampleClient();
-
             // When I call POST /account/signin
             var value = new StringContent("");
-            var response = await client.PostAsync("/account/signin", value);
+            var response = await Client.PostAsync("/account/signin", value);
 
             // Then the result should be Hello
-            string result = await response.Content.ReadAsStringAsync();
-            result.Should().Be("\"Hello\"");
+            var result = await response.Content.ReadAsStringAsync();
+            result.Should().Be("Hello");
         }
 
         [Fact]
         public async Task Get_hello_should_say_hello_to_Sue()
         {
-            // Given a sample client
-            var client = SampleClient();
-
             // When I vall Delete /account/signout
-            var response = await client.DeleteAsync("/account/signout");
+            var response = await Client.DeleteAsync("/account/signout");
 
             // Then the result should be Goodbye
-            string result = await response.Content.ReadAsStringAsync();
-            result.Should().Be("\"Goodbye\"");
+            var result = await response.Content.ReadAsStringAsync();
+            result.Should().Be("Goodbye");
         }
     }
 }

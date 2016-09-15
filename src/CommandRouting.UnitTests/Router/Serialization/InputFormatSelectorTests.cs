@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using CommandRouting.Router.Serialization;
 using FluentAssertions;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using NSubstitute;
 using Xunit;
 

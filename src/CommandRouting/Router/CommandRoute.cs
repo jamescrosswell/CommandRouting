@@ -1,49 +1,45 @@
+using System;
 using System.Threading.Tasks;
-using CommandRouting.Handlers;
-using CommandRouting.Helpers;
 using CommandRouting.Router.Serialization;
-using Microsoft.AspNet.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace CommandRouting.Router
 {
     public class CommandRoute<TRequest> : IRouter
     {
-        private readonly IRequestModelActivator _modelActivator;
         private readonly CommandPipeline<TRequest> _pipeline;
+        private readonly IRequestModelActivator _modelActivator;
         private readonly IResponseWriter _responseWriter;
 
-        public CommandRoute(IRequestModelActivator modelActivator, CommandPipeline<TRequest> pipeline, IResponseWriter responseWriter)
+        public CommandRoute(
+            CommandPipeline<TRequest> pipeline, 
+            IRequestModelActivator modelActivator, 
+            IResponseWriter responseWriter
+            )
         {
-            Ensure.NotNull(modelActivator, nameof(modelActivator));
-            Ensure.NotNull(pipeline, nameof(pipeline));
-            Ensure.NotNull(responseWriter, nameof(responseWriter));
-
-            _modelActivator = modelActivator;
+            if (pipeline == null) throw new ArgumentNullException(nameof(pipeline));
+            if (modelActivator == null) throw new ArgumentNullException(nameof(modelActivator));
+            if (responseWriter == null) throw new ArgumentNullException(nameof(responseWriter));
             _pipeline = pipeline;
+            _modelActivator = modelActivator;
             _responseWriter = responseWriter;
         }
 
-        public async Task RouteAsync(RouteContext context)
+        public Task RouteAsync(RouteContext context)
         {
             // Build a request model from the request... note that we have to make special Unit type since it's a singleton
             object requestModel;
             if (typeof(TRequest) == typeof(Unit))
-               requestModel = Unit.Result;
+                requestModel = Unit.Result;
             else
-                requestModel = await _modelActivator.CreateRequestModelAsync<TRequest>(context);
+                requestModel = _modelActivator.CreateRequestModelAsync<TRequest>(context.HttpContext, context.RouteData).Result;
 
-            // Run the request through our command pipeline
-            IHandlerResult pipelineResult = _pipeline.Dispatch(context.HttpContext, (TRequest)requestModel);
+            // Get a request handler from our command pipeline
+            context.Handler = _pipeline.CanHandleVerb(context.HttpContext)
+                ? _pipeline.GetRequestHandler((TRequest)requestModel, _responseWriter)
+                : null;
 
-            // If the request was handled by our pipeline then write the response out
-            if (pipelineResult.IsHandled)
-            {
-                // Serialize the response model                 
-                await _responseWriter.SerializeResponseAsync(pipelineResult, context.HttpContext);
-
-                // Let OWIN know our middleware handled the request
-                context.IsHandled = true;
-            }
+            return Task.FromResult(0);
         }
 
         public VirtualPathData GetVirtualPath(VirtualPathContext context)
