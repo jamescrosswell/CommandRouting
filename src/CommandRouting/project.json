@@ -1,19 +1,23 @@
 {
   "version": "1.0.0-*",
-  "description": "Test Class Library",
-  "authors": [ "james" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "description": "Command Routing Library",
+  "authors": [ "James Crosswell" ],
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/jamescrosswell/CommandRouting"
+    },
+    "licenseUrl": "https://github.com/jamescrosswell/CommandRouting/blob/master/LICENSE.md"
+  },
   "frameworks": {
-    "dnx451": { }
+    "netcoreapp1.0": {}
   },
   "dependencies": {
-    "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc.Core": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc.Formatters.Json": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Routing": "1.0.0-rc1-final",
-    "System.Runtime": "4.0.21-beta-23516"
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0"
+    },
+    "Microsoft.AspNetCore.Mvc": "1.0.1",
+    "Microsoft.AspNetCore.Routing": "1.0.1"
   }
 }

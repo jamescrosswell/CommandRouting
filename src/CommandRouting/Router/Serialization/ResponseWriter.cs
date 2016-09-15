@@ -1,12 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using CommandRouting.Handlers;
 using CommandRouting.Helpers;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using FileResult = CommandRouting.Handlers.FileResult;
 
 namespace CommandRouting.Router.Serialization
 {
@@ -22,20 +26,20 @@ namespace CommandRouting.Router.Serialization
 
     internal class ResponseWriter : IResponseWriter
     {
-        private readonly IEnumerable<IOutputFormatter> _outputFormatters;
+        private readonly MvcOptions _options;
 
-        public ResponseWriter(IEnumerable<IOutputFormatter> outputFormatters)
+        public ResponseWriter(IOptions<MvcOptions> options)
         {
-            Ensure.NotNull(outputFormatters, nameof(outputFormatters));
-            _outputFormatters = outputFormatters;
+            if (options?.Value == null) throw new ArgumentNullException(nameof(options));
+            _options = options.Value;
         }
 
         /// <inheritdoc />
         public async Task SerializeResponseAsync(IHandlerResult handlerResult, HttpContext httpContext)
         {
             // Validate the arguments
-            Ensure.NotNull(handlerResult, nameof(handlerResult));
-            Ensure.NotNull(httpContext, nameof(httpContext));
+            if (handlerResult == null) throw new ArgumentNullException(nameof(handlerResult));
+            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
 
             // Set the status code on the response
             var httpResponse = handlerResult as IHttpResponse;
@@ -59,7 +63,7 @@ namespace CommandRouting.Router.Serialization
             var formatterContext = httpContext.OutputFormatterContext(handlerResult);
 
             // Use our writer to write a reponse body
-            IOutputFormatter outputFormatter = _outputFormatters.GetBestFormatter(formatterContext);
+            var outputFormatter = _options.OutputFormatters.GetBestFormatter(formatterContext);
             await outputFormatter.WriteAsync(formatterContext);
         }
     }

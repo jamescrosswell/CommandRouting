@@ -2,11 +2,10 @@ version: 1.0.{build}-alpha
 configuration: Release
 os: Visual Studio 2015
 install:
-- dnvm upgrade -r clr
-- dnu restore
+- dotnet --version
+- dotnet restore -s https://api.nuget.org/v3/index.json
 - npm install jsonfile -g
 before_build:
-- nuget restore
 - cd %APPVEYOR_BUILD_FOLDER%\build
 - npm install
 - node patch-project-json.js ../src/CommandRouting/project.json %APPVEYOR_BUILD_VERSION%
@@ -19,8 +18,8 @@ build:
   publish_nuget_symbols: false  
   verbosity: minimal
 test_script:
-- dnx -p src\CommandRouting.UnitTests\project.json test
-- dnx -p src\Sample.IntegrationTests\project.json test
+- dotnet test src\CommandRouting.UnitTests\project.json -c Release
+- dotnet test src\Sample.IntegrationTests\project.json -c Release
 artifacts:
 - path: 'artifacts\bin\CommandRouting\$(configuration)\*.nupkg'
 deploy:

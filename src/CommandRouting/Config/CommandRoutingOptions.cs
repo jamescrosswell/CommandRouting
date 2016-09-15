@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CommandRouting.Router.ValueParsers;
-using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CommandRouting.Config
 {
@@ -10,16 +11,16 @@ namespace CommandRouting.Config
     /// </summary>
     public class CommandRoutingOptions
     {
-        public CommandRoutingOptions()
+        internal CommandRoutingOptions()
         {
             // Setup default options
-            InputFormatters = new List<IInputFormatter> { new JsonInputFormatter() };
-            OutputFormatters = new List<IOutputFormatter> { new JsonOutputFormatter() };
+            //InputFormatters = new List<IInputFormatter> { new JsonInputFormatter() };
+            //OutputFormatters = new List<IOutputFormatter> { new JsonOutputFormatter() };
             ValueParsers = new List<IValueParser> { new RouteValueParser() };
         }
 
-        public IEnumerable<IInputFormatter> InputFormatters { get; }
-        public IEnumerable<IOutputFormatter> OutputFormatters { get; }
+        //public IEnumerable<IInputFormatter> InputFormatters { get; }
+        //public IEnumerable<IOutputFormatter> OutputFormatters { get; }
         public IEnumerable<IValueParser> ValueParsers { get; }
     }
 }

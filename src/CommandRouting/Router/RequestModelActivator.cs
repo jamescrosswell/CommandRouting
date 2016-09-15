@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandRouting.Router.Serialization;
 using CommandRouting.Router.ValueParsers;
-using Microsoft.AspNet.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace CommandRouting.Router
 {
@@ -17,7 +18,7 @@ namespace CommandRouting.Router
         /// The type of the request model that we want to create. 
         /// </typeparam>
         /// <returns>An instance of Type requestType</returns>
-        Task<TRequest> CreateRequestModelAsync<TRequest>(RouteContext routeContext);
+        Task<TRequest> CreateRequestModelAsync<TRequest>(HttpContext httpContext, RouteData routeData);
     }
 
     /// <summary>
@@ -50,18 +51,18 @@ namespace CommandRouting.Router
         }
 
         /// <inheritdoc />
-        public async Task<TRequest> CreateRequestModelAsync<TRequest>(RouteContext routeContext)
+        public async Task<TRequest> CreateRequestModelAsync<TRequest>(HttpContext httpContext, RouteData routeData)
         {
             // Validate method parameters
-            if (routeContext == null)
-                throw new ArgumentNullException(nameof(routeContext));
+            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
+            if (routeData == null) throw new ArgumentNullException(nameof(routeData));
 
             // Try to deserialize the message body to the appropriate request model or create a default instance
-            var model = await _requestReader.DeserializeRequestAsync<TRequest>(routeContext.HttpContext);
+            var model = await _requestReader.DeserializeRequestAsync<TRequest>(httpContext);
 
             // Merge in any values from the value parsers
             foreach (var parser in _valueParsers)
-                parser.ParseValues(routeContext.RouteData, model);
+                parser.ParseValues(routeData, model);
 
             // Return the result
             return model;

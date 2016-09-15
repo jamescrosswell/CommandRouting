@@ -1,10 +1,13 @@
 ﻿using System.Threading.Tasks;
 using CommandRouting;
 using CommandRouting.Config;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Sample.Commands.Account;
 using Sample.Commands.Jump;
 using Sample.Commands.Logo;
@@ -16,12 +19,26 @@ namespace Sample
     {
         public Startup(IHostingEnvironment env)
         {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
+
+        private IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime and can be used to add services to the DI container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Enable command routing
+            services
+                .AddMvcCore()
+                .AddJsonFormatters(settings =>
+                {
+                    settings.Formatting = Formatting.Indented;
+                });
             services.AddRouting();
             services.AddCommandRouting();
 
@@ -30,11 +47,9 @@ namespace Sample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            app.UseIISPlatformHandler();
-
-            var commandRoutes = new CommandRouteBuilder(app.ApplicationServices);
+            var commandRoutes = new CommandRouteBuilder(app);
 
             commandRoutes
                 .Get("hello/{name:alpha}")
@@ -54,19 +69,20 @@ namespace Sample
             commandRoutes.Map("account").To<AccountCommands>();
             commandRoutes.Map("jump").To<JumpCommands>();
 
-            commandRoutes.AddAttributeRouting();
+            //commandRoutes.AddAttributeRouting();
 
-            app.UseRouter(commandRoutes.Build());
+            // Configure logging
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
-            app.Run(HelloWorld);
+            // Finally configure MVC
+            app.UseMvc()
+               .UseRouter(commandRoutes.Build());
         }
 
         public async Task HelloWorld(HttpContext context)
         {
             await context.Response.WriteAsync("Nothing here...");
-        }
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+        }        
     }
 }

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandRouting.Helpers;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
 
 namespace CommandRouting.Router.Serialization
 {
@@ -20,13 +22,13 @@ namespace CommandRouting.Router.Serialization
 
     public class RequestReader : IRequestReader
     {
-        private readonly IEnumerable<IInputFormatter> _inputFormatters;
+        private readonly IOptions<MvcOptions> _options;
 
-        public RequestReader(IEnumerable<IInputFormatter> inputFormatters)
+        public RequestReader(IOptions<MvcOptions> options)
         {
-            Ensure.NotNull(inputFormatters, nameof(inputFormatters));
-            _inputFormatters = inputFormatters;
-        }
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            _options = options;
+                    }
 
         /// <inheritdoc />
         public async Task<TRequest> DeserializeRequestAsync<TRequest>(HttpContext httpContext)
@@ -35,8 +37,8 @@ namespace CommandRouting.Router.Serialization
                 throw new ArgumentNullException(nameof(httpContext));
 
             // Work out what input format to use
-            InputFormatterContext formatContext = httpContext.InputFormatterContext<TRequest>();
-            IInputFormatter inputFormatter = _inputFormatters.GetBestFormatter(formatContext);
+            var formatContext = httpContext.InputFormatterContext<TRequest>();
+            var inputFormatter = _options.Value.InputFormatters.GetBestFormatter(formatContext);
 
             // Have the formatter dezerialize a model from the http request body
             var inputFormatterResult = await inputFormatter.ReadAsync(formatContext);

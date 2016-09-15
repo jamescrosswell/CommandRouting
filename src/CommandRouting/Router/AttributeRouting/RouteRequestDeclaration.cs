@@ -11,8 +11,8 @@ namespace CommandRouting.Router.AttributeRouting
 
         public RouteRequestDeclaration(Type requestType, IEnumerable<RouteRequestAttribute> routeRequestAttributes)
         {
-            Ensure.NotNull(requestType, nameof(requestType));
-            Ensure.NotNull(routeRequestAttributes, nameof(routeRequestAttributes));
+            if (requestType == null) throw new ArgumentNullException(nameof(requestType));
+            if (routeRequestAttributes == null) throw new ArgumentNullException(nameof(routeRequestAttributes));
             RequestType = requestType;
             RouteRequestAttributes = routeRequestAttributes;
         }
