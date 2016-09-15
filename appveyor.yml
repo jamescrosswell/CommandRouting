@@ -21,6 +21,7 @@ after_build:
 - cd %APPVEYOR_BUILD_FOLDER%\src\CommandRouting
 - dotnet pack --configuration $(configuration) --output ..\..\artifacts\
 test_script:
+- cd %APPVEYOR_BUILD_FOLDER%
 - dotnet test src\CommandRouting.UnitTests\project.json -c Release
 - dotnet test src\Sample.IntegrationTests\project.json -c Release
 artifacts:
